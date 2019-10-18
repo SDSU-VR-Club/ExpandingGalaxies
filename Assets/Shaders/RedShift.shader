@@ -3,7 +3,7 @@
     Properties
     {
         _MainTex ("Texture", 2D) = "white" {}
-    }
+	}
     SubShader
     {
         // No culling or depth
@@ -38,14 +38,14 @@
             }
 
             sampler2D _MainTex;
-            sampler2D _CameraDepthTexture;
-
+            sampler2D _CameraDepthTexture;	
+			
             fixed4 frag (v2f i) : SV_Target
             {
                 fixed4 col = tex2D(_MainTex, i.uv);
                 
                 float depth = tex2D(_CameraDepthTexture, i.uv).rgb;
-                depth = Linear01Depth(depth);
+				depth = Linear01Depth(depth);
                 
                 if(depth == 1)
                     depth = 0;
@@ -53,7 +53,6 @@
                 col.r += depth;
                 col.g -= depth;
                 col.b -= depth;
-
 
                 //col.rgb = col.rgb - depth.rgb;
                 return col;
