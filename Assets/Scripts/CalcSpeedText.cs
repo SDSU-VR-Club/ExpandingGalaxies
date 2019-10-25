@@ -3,19 +3,24 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 
-public class DisplaySpeed : MonoBehaviour
+public class CalcSpeedText : MonoBehaviour
 {
     public TextMeshProUGUI SpeedText;
-    public float x = 0.05f;
+    public float SPEED = 0.05f;
 
     void Start()
     {
         StartCoroutine(CalcVelocity()); // Begins the coroutine
     }
+    public void ToggleText()
+    {
+        SpeedText.enabled = !SpeedText.enabled;
+    }
 
     private void Update()
     {
-        transform.Translate(0, 0, x); // moving gameobject
+        transform.Translate(0, 0, SPEED); // moving gameobject
+
     }
 
     IEnumerator CalcVelocity() // The CalcVelocity coroutine
@@ -32,4 +37,13 @@ public class DisplaySpeed : MonoBehaviour
             SpeedText.text = currVel.ToString(); // turns number to string
         }
     }
+    
+    //void OnMouseOver()
+    //{
+    //    Debug.Log("Mouse is over GameObject");  
+    //}
+    // void OnMouseExit()
+    //{
+    //    Debug.Log("Mouse is no longer on GameObject");
+    //}
 }
