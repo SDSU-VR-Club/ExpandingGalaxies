@@ -25,8 +25,9 @@ public class Generator : MonoBehaviour
     void Start()
     {
         Universe testUniverse = new Universe(cluster, seed, clusterRadiusScalar, innerRadius, outerRadius,clusterCount);
+        
     }
-
+   
 
 }
 
@@ -48,6 +49,7 @@ public class Universe : MonoBehaviour
         //create the seed as per user input seed value ( same seed = same generation )
         Random.InitState(seed);
 
+        List<Transform> clusters = new List<Transform>();
         //players radius surrounding them (area of no spawn for clusters)
         //Vector3 playerRadiusVector = new Vector3(playerRadius, playerRadius, playerRadius);
         //Debug.Log(playerRadiusVector);
@@ -84,7 +86,7 @@ public class Universe : MonoBehaviour
                 GameObject newCluster = Instantiate(cluster, spawnPos, Random.rotation,clusterParent.transform);
                 newCluster.name = "Cluster" + currentSpawn;
                 newCluster.transform.localScale *= clusterScalar;
-
+                clusters.Add(newCluster.transform);
                 //populate generated cluster
                 //Cluster.PopulateCluster(newCluster, planet, seed, planetAmount, currentCord, indexer, clusterScaleScalar);
 
@@ -93,5 +95,6 @@ public class Universe : MonoBehaviour
                 ++currentSpawn;
             }
         }
+        FindObjectOfType<ExpansionManager>().stars = clusters;
     }
 }
