@@ -1611,7 +1611,7 @@ Rigidbody:
   m_Mass: 1
   m_Drag: 0
   m_AngularDrag: 0
-  m_UseGravity: 0
+  m_UseGravity: 1
   m_IsKinematic: 1
   m_Interpolate: 0
   m_Constraints: 0
@@ -1628,7 +1628,6 @@ GameObject:
   - component: {fileID: 6567055088419944724}
   - component: {fileID: 6536939293129402698}
   - component: {fileID: 6536939293558129126}
-  - component: {fileID: 564748073019900351}
   m_Layer: 26
   m_Name: LeftHand
   m_TagString: Untagged
@@ -1758,21 +1757,6 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 4294967039
   hand: {fileID: 0}
---- !u!114 &564748073019900351
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6567055088410279354}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 312a425c4d4a42e4c967173a4d50815d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  travelSpeed: 0.1
-  player: {fileID: 6567055088409991950}
-  BackupCam: {fileID: 0}
 --- !u!1 &6567055088410295688
 GameObject:
   m_ObjectHideFlags: 0
@@ -2104,6 +2088,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6567055088409991950}
   - component: {fileID: 6567055088419961346}
+  - component: {fileID: 479221801}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -2160,6 +2145,21 @@ MonoBehaviour:
     actionPath: /actions/default/in/HeadsetOnHead
     needsReinit: 1
   allowToggleTo2D: 1
+--- !u!114 &479221801
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6567055088410307446}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 312a425c4d4a42e4c967173a4d50815d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  travelSpeed: 0.01
+  player: {fileID: 0}
+  BackupCam: {fileID: 6567055088408347736}
 --- !u!1 &6567055088410307864
 GameObject:
   m_ObjectHideFlags: 0
@@ -2312,6 +2312,7 @@ GameObject:
   - component: {fileID: 6567055088409909940}
   - component: {fileID: 6567055088408347736}
   - component: {fileID: 6567055088419901954}
+  - component: {fileID: 133595188}
   m_Layer: 0
   m_Name: FallbackObjects
   m_TagString: MainCamera
@@ -2327,7 +2328,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6567055088410312352}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 1.75, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 6567055088410012556}
@@ -2391,6 +2392,14 @@ MonoBehaviour:
   speed: 4
   shiftSpeed: 16
   showInstructions: 1
+--- !u!92 &133595188
+Behaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6567055088410312352}
+  m_Enabled: 1
 --- !u!1 &6567055088410318378
 GameObject:
   m_ObjectHideFlags: 0
@@ -2432,7 +2441,7 @@ SphereCollider:
   m_GameObject: {fileID: 6567055088410318378}
   m_Material: {fileID: 0}
   m_IsTrigger: 0
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 2
   m_Radius: 0.12
   m_Center: {x: 0, y: 0, z: 0}
@@ -2447,7 +2456,7 @@ Rigidbody:
   m_Mass: 1
   m_Drag: 0
   m_AngularDrag: 0
-  m_UseGravity: 0
+  m_UseGravity: 1
   m_IsKinematic: 1
   m_Interpolate: 0
   m_Constraints: 0
