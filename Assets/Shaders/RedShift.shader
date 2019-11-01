@@ -50,13 +50,13 @@
                 float depth = tex2D(_CurrentDepthTexture, i.uv).rgb;
                 float lastDepth = tex2D(_LastDepthTexture, i.uv).rgb;
 
-                float diff = abs(depth - lastDepth);
+                float diff = (depth - lastDepth);
                                
                 col.r += diff;
                 col.g -= diff;
                 col.b -= diff;
 
-                return diff;
+                return 1-diff;
             }
             ENDCG
         }
