@@ -122,7 +122,7 @@ public class ClusterTravel : MonoBehaviour
         HitBoi.collider.enabled = false;
         lastCol = HitBoi.collider;
         player.parent = HitBoi.collider.transform;
-        AudioScript.instance.PlayTraversalSound();
+        AudioScript.instance.PlaySFX();
     }
    
 }

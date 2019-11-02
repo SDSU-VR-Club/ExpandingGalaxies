@@ -5,8 +5,9 @@ using UnityEngine.Audio;
 
 public class AudioScript : MonoBehaviour
 {
-    public AudioClip UI_Select;
+    public AudioSource planetSelect;
     public AudioSource traversalSound;
+    public AudioMixer masterMixer;
     public static AudioScript instance;
     // Start is called before the first frame update
     void Start()
@@ -16,18 +17,18 @@ public class AudioScript : MonoBehaviour
 
     public void PlaySFX()
     {
-        GetComponent<AudioSource>().PlayOneShot(UI_Select);
-    }
-    public void PlayTraversalSound()
-    {
+        planetSelect.Play();
         traversalSound.Play();
     }
+
+    public void SetVolumeLevel(float sliderValue)
+    {
+        masterMixer.SetFloat("MasterVol", Mathf.Log10(sliderValue) * 20);
+    }
+    
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            PlaySFX();
-        }
+        
     }
 }

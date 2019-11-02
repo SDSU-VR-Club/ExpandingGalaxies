@@ -45,7 +45,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 955e6fcde74a1b745b584c5962b101d7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  UI_Select: {fileID: 8300000, guid: b6ae2da5a1941954d9289d86e94f6f78, type: 3}
+  planetSelect: {fileID: 0}
   traversalSound: {fileID: 6612513132867425300}
 --- !u!82 &6612513131255668156
 AudioSource:
