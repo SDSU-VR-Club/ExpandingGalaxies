@@ -7,10 +7,12 @@ public class CalcSpeedText : MonoBehaviour
 {
     public TextMeshProUGUI SpeedText;
     public float SPEED = 0.05f;
-
+    public Transform target;
+    public float scaleFactor;
     void Start()
     {
-        StartCoroutine(CalcVelocity()); // Begins the coroutine
+        target = ClusterTravel.player;
+        SpeedText.enabled = false;
     }
     public void ToggleText()
     {
@@ -19,25 +21,40 @@ public class CalcSpeedText : MonoBehaviour
 
     private void Update()
     {
-        transform.Translate(0, 0, SPEED); // moving gameobject
 
     }
 
     IEnumerator CalcVelocity() // The CalcVelocity coroutine
     {
+        var lastDist= (transform.position - target.position).magnitude;
         while (Application.isPlaying) // While game is running
         {
-            var prevPos = transform.position; // creating a variable to hold previous position coordinates
-            yield return new WaitForEndOfFrame(); // 
-            var currVel = (prevPos - transform.position).magnitude / Time.deltaTime;
+
+
+
             // calculates the speed by finding the absoluate value between previous postion
             // and current position, and then dividing by the change in time between frames
+            var currDist = (transform.position - target.position).magnitude;
+            var currVel = currDist - lastDist;
+            lastDist = currDist;
 
-            //Debug.Log(currVel);
-            SpeedText.text = currVel.ToString(); // turns number to string
+            SpeedText.text = currVel.ToString("F2"); // turns number to string
+            SpeedText.transform.parent.LookAt(target);
+            SpeedText.transform.parent.localScale = scaleFactor * currDist*Vector3.one;
+            yield return new WaitForSeconds(1); // 
         }
     }
-    
+    public void StartShowText()
+    {
+        print("THIS IS HAPPENING WAY TOO MUCH");
+        StartCoroutine(CalcVelocity());
+        SpeedText.enabled = true;
+    }
+    public void StopShowText()
+    {
+        StopAllCoroutines();
+        SpeedText.enabled = false;
+    }
     //void OnMouseOver()
     //{
     //    Debug.Log("Mouse is over GameObject");  

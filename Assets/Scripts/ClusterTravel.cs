@@ -7,17 +7,19 @@ public class ClusterTravel : MonoBehaviour
 {
     public float travelSpeed;
     Collider lastCol;
-    public Transform player;
+    public static Transform player;
+    public Transform startingPlayer;
     public Camera BackupCam;
     public Transform leftHand, rightHand;
     public LineRenderer leftRenderer, rightRenderer;
     public Color highlightColor;
     GameObject leftHighlighted;
     GameObject rightHighlighted;
+    public LayerMask clusterMask;
     // Start is called before the first frame update
     void Start()
     {
-        
+        player = startingPlayer;
     }
 
     // Update is called once per frame
@@ -28,7 +30,7 @@ public class ClusterTravel : MonoBehaviour
         {
             RaycastHit HitBoi;
             
-            if (Physics.Raycast(leftHand.position,leftHand.forward, out HitBoi,Mathf.Infinity))
+            if (Physics.Raycast(leftHand.position,leftHand.forward, out HitBoi,Mathf.Infinity,clusterMask))
             {
 
                 followCluster(HitBoi);
@@ -38,14 +40,20 @@ public class ClusterTravel : MonoBehaviour
         {
             RaycastHit HitBoi;
 
-            if (Physics.Raycast(leftHand.position, leftHand.forward, out HitBoi, Mathf.Infinity))
+            if (Physics.Raycast(leftHand.position, leftHand.forward, out HitBoi, Mathf.Infinity,clusterMask))
             {
-                HitBoi.collider.gameObject.GetComponent<MeshRenderer>().material.color = Color.cyan;
-                if(leftHighlighted&&leftHighlighted!=HitBoi.collider.gameObject)
-                    leftHighlighted.GetComponent<MeshRenderer>().material.color = Color.white;
-                leftHighlighted = HitBoi.collider.gameObject;
-                leftRenderer.SetColors(highlightColor, highlightColor);
-
+                if (HitBoi.collider.gameObject != leftHighlighted)
+                {
+                    HitBoi.collider.gameObject.GetComponent<MeshRenderer>().material.color = Color.cyan;
+                    if (leftHighlighted && leftHighlighted != HitBoi.collider.gameObject)
+                    {
+                        leftHighlighted.GetComponent<MeshRenderer>().material.color = Color.white;
+                        leftHighlighted.GetComponent<CalcSpeedText>().StopShowText();
+                    }
+                    leftHighlighted = HitBoi.collider.gameObject;
+                    leftHighlighted.GetComponent<CalcSpeedText>().StartShowText();
+                    leftRenderer.SetColors(highlightColor, highlightColor);
+                }
             }
             else
             {
@@ -56,7 +64,7 @@ public class ClusterTravel : MonoBehaviour
         {
             RaycastHit HitBoi;
 
-            if (Physics.Raycast(rightHand.position, rightHand.forward, out HitBoi, Mathf.Infinity))
+            if (Physics.Raycast(rightHand.position, rightHand.forward, out HitBoi, Mathf.Infinity,clusterMask))
             {
 
                 followCluster(HitBoi);
@@ -66,14 +74,20 @@ public class ClusterTravel : MonoBehaviour
         {
             RaycastHit HitBoi;
 
-            if (Physics.Raycast(rightHand.position, rightHand.forward, out HitBoi, Mathf.Infinity))
+            if (Physics.Raycast(rightHand.position, rightHand.forward, out HitBoi, Mathf.Infinity,clusterMask))
             {
-                HitBoi.collider.gameObject.GetComponent<MeshRenderer>().material.color = Color.cyan;
-                if(rightHighlighted && rightHighlighted != HitBoi.collider.gameObject)
-                    rightHighlighted.GetComponent<MeshRenderer>().material.color = Color.white;
-                rightHighlighted = HitBoi.collider.gameObject;
-                rightRenderer.SetColors(highlightColor, highlightColor);
-
+                if (HitBoi.collider.gameObject != rightHighlighted)
+                {
+                    HitBoi.collider.gameObject.GetComponent<MeshRenderer>().material.color = Color.cyan;
+                    if (rightHighlighted && rightHighlighted != HitBoi.collider.gameObject)
+                    {
+                        rightHighlighted.GetComponent<MeshRenderer>().material.color = Color.white;
+                        rightHighlighted.GetComponent<CalcSpeedText>().StopShowText();
+                    }
+                    rightHighlighted = HitBoi.collider.gameObject;
+                    rightHighlighted.GetComponent<CalcSpeedText>().StartShowText();
+                    rightRenderer.SetColors(highlightColor, highlightColor);
+                }
             }
             else
             {
@@ -87,7 +101,7 @@ public class ClusterTravel : MonoBehaviour
             
             Ray LASERBOI = BackupCam.ScreenPointToRay(Input.mousePosition);
 
-            if (Physics.Raycast(LASERBOI, out HitBoi))
+            if (Physics.Raycast(LASERBOI, out HitBoi,clusterMask))
             {
                 //print(HitBoi.collider.gameObject.name);
                 followCluster(HitBoi);
@@ -99,14 +113,20 @@ public class ClusterTravel : MonoBehaviour
 
             Ray LASERBOI = BackupCam.ScreenPointToRay(Input.mousePosition);
 
-            if (Physics.Raycast(LASERBOI, out HitBoi))
+            if (Physics.Raycast(LASERBOI, out HitBoi,clusterMask))
             {
-                HitBoi.collider.gameObject.GetComponent<MeshRenderer>().material.color = Color.cyan;
-                if(rightHighlighted && rightHighlighted != HitBoi.collider.gameObject)
-                    rightHighlighted.GetComponent<MeshRenderer>().material.color = Color.white;
-                rightHighlighted = HitBoi.collider.gameObject;
-                rightRenderer.SetColors(highlightColor, highlightColor);
-
+                if (HitBoi.collider.gameObject != rightHighlighted)
+                {
+                    HitBoi.collider.gameObject.GetComponent<MeshRenderer>().material.color = Color.cyan;
+                    if (rightHighlighted && rightHighlighted != HitBoi.collider.gameObject)
+                    {
+                        rightHighlighted.GetComponent<MeshRenderer>().material.color = Color.white;
+                        rightHighlighted.GetComponent<CalcSpeedText>().StopShowText();
+                    }
+                    rightHighlighted = HitBoi.collider.gameObject;
+                    rightHighlighted.GetComponent<CalcSpeedText>().StartShowText();
+                    rightRenderer.SetColors(highlightColor, highlightColor);
+                }
             }
             else
             {
@@ -123,6 +143,7 @@ public class ClusterTravel : MonoBehaviour
         lastCol = HitBoi.collider;
         player.parent = HitBoi.collider.transform;
         AudioScript.instance.PlaySFX();
+        HitBoi.collider.gameObject.GetComponent<CalcSpeedText>().StartShowText();
     }
    
 }

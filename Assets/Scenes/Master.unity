@@ -222,7 +222,7 @@ RectTransform:
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 10, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -304,7 +304,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &664683306
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -878,7 +878,7 @@ RectTransform:
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 20, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -1092,6 +1092,14 @@ PrefabInstance:
     - target: {fileID: 479221801, guid: 30837c0ef536b064ba4dd8f999910918, type: 3}
       propertyPath: highlightColor.a
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 479221801, guid: 30837c0ef536b064ba4dd8f999910918, type: 3}
+      propertyPath: startingPlayer
+      value: 
+      objectReference: {fileID: 772577189}
+    - target: {fileID: 479221801, guid: 30837c0ef536b064ba4dd8f999910918, type: 3}
+      propertyPath: clusterMask.m_Bits
+      value: 55
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 30837c0ef536b064ba4dd8f999910918, type: 3}
@@ -1698,12 +1706,6 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 6612513131255668156, guid: cd965680df46cb34f95154d728cfdc6c,
-        type: 3}
-      propertyPath: OutputAudioMixerGroup
-      value: 
-      objectReference: {fileID: 3415514798810522593, guid: c15aafe32249da54a85348b4fabc89ae,
-        type: 2}
     - target: {fileID: 6612513131255668157, guid: cd965680df46cb34f95154d728cfdc6c,
         type: 3}
       propertyPath: traversalSound
@@ -1719,6 +1721,12 @@ PrefabInstance:
       propertyPath: masterMixer
       value: 
       objectReference: {fileID: 24100000, guid: c15aafe32249da54a85348b4fabc89ae,
+        type: 2}
+    - target: {fileID: 6612513131255668156, guid: cd965680df46cb34f95154d728cfdc6c,
+        type: 3}
+      propertyPath: OutputAudioMixerGroup
+      value: 
+      objectReference: {fileID: 3415514798810522593, guid: c15aafe32249da54a85348b4fabc89ae,
         type: 2}
     - target: {fileID: 8663017760349882880, guid: cd965680df46cb34f95154d728cfdc6c,
         type: 3}
