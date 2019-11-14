@@ -46,7 +46,6 @@ public class CalcSpeedText : MonoBehaviour
     }
     public void StartShowText()
     {
-        print("THIS IS HAPPENING WAY TOO MUCH");
         StartCoroutine(CalcVelocity());
         SpeedText.enabled = true;
     }

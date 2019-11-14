@@ -132,6 +132,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Teleporting
       objectReference: {fileID: 0}
+    - target: {fileID: 7784229239253002029, guid: 39ffb70cf1bbf6f4ab092c9e53f16750,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 7784229239253335639, guid: 39ffb70cf1bbf6f4ab092c9e53f16750,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -186,6 +191,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7784229239243316169, guid: 39ffb70cf1bbf6f4ab092c9e53f16750,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 39ffb70cf1bbf6f4ab092c9e53f16750, type: 3}
@@ -396,7 +406,7 @@ GameObject:
   - component: {fileID: 686068872}
   - component: {fileID: 686068874}
   - component: {fileID: 686068873}
-  m_Layer: 26
+  m_Layer: 0
   m_Name: laserPoint
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1099,7 +1109,67 @@ PrefabInstance:
       objectReference: {fileID: 772577189}
     - target: {fileID: 479221801, guid: 30837c0ef536b064ba4dd8f999910918, type: 3}
       propertyPath: clusterMask.m_Bits
-      value: 55
+      value: 256
+      objectReference: {fileID: 0}
+    - target: {fileID: 6536939300870304192, guid: 30837c0ef536b064ba4dd8f999910918,
+        type: 3}
+      propertyPath: clearanceCheckMask.m_Bits
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6536939300870304192, guid: 30837c0ef536b064ba4dd8f999910918,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6567055088410279354, guid: 30837c0ef536b064ba4dd8f999910918,
+        type: 3}
+      propertyPath: m_Layer
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6567055088410295688, guid: 30837c0ef536b064ba4dd8f999910918,
+        type: 3}
+      propertyPath: m_Layer
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6567055088410233610, guid: 30837c0ef536b064ba4dd8f999910918,
+        type: 3}
+      propertyPath: m_Layer
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6567055088410298026, guid: 30837c0ef536b064ba4dd8f999910918,
+        type: 3}
+      propertyPath: m_Layer
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6567055088410235442, guid: 30837c0ef536b064ba4dd8f999910918,
+        type: 3}
+      propertyPath: m_Layer
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6567055088410245778, guid: 30837c0ef536b064ba4dd8f999910918,
+        type: 3}
+      propertyPath: m_Layer
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6536939293558129126, guid: 30837c0ef536b064ba4dd8f999910918,
+        type: 3}
+      propertyPath: clearanceCheckMask.m_Bits
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6536939293558129126, guid: 30837c0ef536b064ba4dd8f999910918,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6566618031158384240, guid: 30837c0ef536b064ba4dd8f999910918,
+        type: 3}
+      propertyPath: m_Layer
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6566618031382226726, guid: 30837c0ef536b064ba4dd8f999910918,
+        type: 3}
+      propertyPath: m_Layer
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 30837c0ef536b064ba4dd8f999910918, type: 3}
@@ -1187,7 +1257,7 @@ GameObject:
   - component: {fileID: 1790309967}
   - component: {fileID: 1790309969}
   - component: {fileID: 1790309968}
-  m_Layer: 26
+  m_Layer: 0
   m_Name: laserPoint
   m_TagString: Untagged
   m_Icon: {fileID: 0}

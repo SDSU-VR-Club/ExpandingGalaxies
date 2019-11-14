@@ -91,7 +91,6 @@ public class Universe : MonoBehaviour
                 //Cluster.PopulateCluster(newCluster, planet, seed, planetAmount, currentCord, indexer, clusterScaleScalar);
 
                 //prevCord = currentCord;
-                Debug.Log("Cluster " + (currentSpawn) + ": " + newCluster.transform.position);
                 ++currentSpawn;
             }
         }
