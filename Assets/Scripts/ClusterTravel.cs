@@ -29,10 +29,8 @@ public class ClusterTravel : MonoBehaviour
         if (leftHand.gameObject.active&&leftHand.GetComponent<Hand>().grabPinchAction.stateDown)
         {
             RaycastHit HitBoi;
-            
             if (Physics.Raycast(leftHand.position,leftHand.forward, out HitBoi,Mathf.Infinity,clusterMask))
             {
-
                 followCluster(HitBoi);
             }
         }
@@ -44,10 +42,10 @@ public class ClusterTravel : MonoBehaviour
             {
                 if (HitBoi.collider.gameObject != leftHighlighted)
                 {
-                    HitBoi.collider.gameObject.GetComponent<MeshRenderer>().material.color = Color.cyan;
+                    HitBoi.collider.gameObject.GetComponent<MeshRenderer>().material.color = new Color(0, 1, 1, 0.5f);
                     if (leftHighlighted && leftHighlighted != HitBoi.collider.gameObject)
                     {
-                        leftHighlighted.GetComponent<MeshRenderer>().material.color = Color.white;
+                        leftHighlighted.GetComponent<MeshRenderer>().material.color = new Color(1, 1, 1, 0.5f);
                         leftHighlighted.GetComponent<CalcSpeedText>().StopShowText();
                     }
                     leftHighlighted = HitBoi.collider.gameObject;
@@ -78,10 +76,10 @@ public class ClusterTravel : MonoBehaviour
             {
                 if (HitBoi.collider.gameObject != rightHighlighted)
                 {
-                    HitBoi.collider.gameObject.GetComponent<MeshRenderer>().material.color = Color.cyan;
+                    HitBoi.collider.gameObject.GetComponent<MeshRenderer>().material.color = new Color(0, 1, 1, 0.5f);
                     if (rightHighlighted && rightHighlighted != HitBoi.collider.gameObject)
                     {
-                        rightHighlighted.GetComponent<MeshRenderer>().material.color = Color.white;
+                        rightHighlighted.GetComponent<MeshRenderer>().material.color = new Color(1, 1, 1, 0.5f);
                         rightHighlighted.GetComponent<CalcSpeedText>().StopShowText();
                     }
                     rightHighlighted = HitBoi.collider.gameObject;
@@ -117,10 +115,10 @@ public class ClusterTravel : MonoBehaviour
             {
                 if (HitBoi.collider.gameObject != rightHighlighted)
                 {
-                    HitBoi.collider.gameObject.GetComponent<MeshRenderer>().material.color = Color.cyan;
+                    HitBoi.collider.gameObject.GetComponent<MeshRenderer>().material.color = new Color(0, 1, 1, 0.5f);
                     if (rightHighlighted && rightHighlighted != HitBoi.collider.gameObject)
                     {
-                        rightHighlighted.GetComponent<MeshRenderer>().material.color = Color.white;
+                        rightHighlighted.GetComponent<MeshRenderer>().material.color = new Color(1, 1, 1, 0.5f);
                         rightHighlighted.GetComponent<CalcSpeedText>().StopShowText();
                     }
                     rightHighlighted = HitBoi.collider.gameObject;
