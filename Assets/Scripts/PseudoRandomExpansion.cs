@@ -12,16 +12,22 @@ public class PseudoRandomExpansion : MonoBehaviour
     public int chunkStarCount = 100;
     public float chunkWidth = 100;
 
+    Queue<GameObject> starPool;
+    [SerializeField]
+    int maxStarCount;
+
     GameObject starContainer;
     Dictionary<Vector3Int, GameObject[]> chunkDictonary;
     private void Awake()
     {
+        starPool = new Queue<GameObject>();
         pseudoRandomExpansion = this;
         chunkDictonary = new Dictionary<Vector3Int, GameObject[]>();
         starContainer = new GameObject("StarCointainer");
     }
     void Start()
     {
+        CreatePool();
     }
 
 
@@ -42,8 +48,9 @@ public class PseudoRandomExpansion : MonoBehaviour
         GameObject[] starsInChunk = new GameObject[chunkStarCount];
         for (int i = 0; i < chunkStarCount; i++)
         {
-            starsInChunk[i] = Instantiate(star, RandomInCube(chunkWidth) + (Vector3)pos * chunkWidth, Quaternion.identity);
-            starsInChunk[i].transform.parent = starContainer.transform;
+            SpawnStarFromPool(RandomInCube(chunkWidth) + (Vector3)pos * chunkWidth);
+            //starsInChunk[i] = Instantiate(star, RandomInCube(chunkWidth) + (Vector3)pos * chunkWidth, Quaternion.identity);
+            //starsInChunk[i].transform.parent = starContainer.transform;
         }
         chunkDictonary.Add(pos, starsInChunk);
 
@@ -66,7 +73,8 @@ public class PseudoRandomExpansion : MonoBehaviour
         GameObject[] currChunk = chunkDictonary[pos];
         foreach (GameObject star in currChunk)
         {
-            Destroy(star);
+            //star.SetActive(false);
+            //Destroy(star);
         }
         chunkDictonary.Remove(pos);
     }
@@ -101,4 +109,27 @@ public class PseudoRandomExpansion : MonoBehaviour
         v3.z = Random.Range(zmin, zmax);
         return v3;
     }
+
+
+    void CreatePool()
+    {
+        for (int i = 0; i < maxStarCount; i++)
+        {
+            GameObject obj = Instantiate(star);
+            obj.SetActive(false);
+            starPool.Enqueue(obj);
+        }
+    }
+
+    GameObject SpawnStarFromPool(Vector3 position)
+    {
+        GameObject toSpawn = starPool.Dequeue();
+        toSpawn.SetActive(true);
+        toSpawn.transform.position = position;
+
+        starPool.Enqueue(toSpawn);
+
+        return toSpawn;
+    }
+
 }
