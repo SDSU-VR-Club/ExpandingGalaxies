@@ -598,7 +598,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   star: {fileID: 2557722757770109888, guid: 710dd59362da2e14980b43aad9ade962, type: 3}
-  chunkStarCount: 20
+  chunkStarCount: 5
   chunkWidth: 400
   maxStarCount: 10000
 --- !u!4 &1573105146
