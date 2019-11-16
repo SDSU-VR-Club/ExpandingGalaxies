@@ -17,7 +17,7 @@ public class KainPlayerMove : MonoBehaviour
 
     void Update()
     {
-        if (true)//Input.GetKey(KeyCode.Space))
+        if (Input.GetKey(KeyCode.Space))
         {
             transform.position += rightHand.forward * speed * Time.deltaTime;
         }

@@ -8,7 +8,7 @@ public class PseudoRandomPlayerExample : MonoBehaviour
     float chunkWidth;
 
     [SerializeField]
-    float distanceToLoad, distanceToDestroy;
+    float distanceToLoad = 16, distanceToDestroy = 16.5f;
 
     List<Vector3Int> loadedPositions;
     private void Awake()
@@ -20,6 +20,7 @@ public class PseudoRandomPlayerExample : MonoBehaviour
     {
         PRE = PseudoRandomExpansion.pseudoRandomExpansion;
         chunkWidth = PRE.chunkWidth;
+
 
 
         loadedPositions = new List<Vector3Int>();

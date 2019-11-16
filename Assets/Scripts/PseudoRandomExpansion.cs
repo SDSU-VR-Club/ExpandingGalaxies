@@ -9,12 +9,12 @@ public class PseudoRandomExpansion : MonoBehaviour
     [SerializeField]
     GameObject star;
 
-    public int chunkStarCount = 100;
+    public int chunkStarCount = 1;
     public float chunkWidth = 100;
 
     Queue<GameObject> starPool;
     [SerializeField]
-    int maxStarCount;
+    int maxStarCount = 10000;
 
     GameObject starContainer;
     Dictionary<Vector3Int, GameObject[]> chunkDictonary;

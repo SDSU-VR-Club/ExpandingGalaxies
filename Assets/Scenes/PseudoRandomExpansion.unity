@@ -17,7 +17,7 @@ RenderSettings:
   m_Fog: 1
   m_FogColor: {r: 0, g: 0, b: 0, a: 1}
   m_FogMode: 3
-  m_FogDensity: 0.0045
+  m_FogDensity: 0.0056
   m_LinearFogStart: 0
   m_LinearFogEnd: 300
   m_AmbientSkyColor: {r: 0.212, g: 0.227, b: 0.259, a: 1}
@@ -553,8 +553,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a090f1d19c4b1e648bd7943483709ad3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  distanceToLoad: 4
-  distanceToDestroy: 4.5
+  distanceToLoad: 16
+  distanceToDestroy: 16.5
 --- !u!65 &1396267130
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -598,8 +598,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   star: {fileID: 2557722757770109888, guid: 710dd59362da2e14980b43aad9ade962, type: 3}
-  chunkStarCount: 5
-  chunkWidth: 400
+  chunkStarCount: 1
+  chunkWidth: 100
   maxStarCount: 10000
 --- !u!4 &1573105146
 Transform:
