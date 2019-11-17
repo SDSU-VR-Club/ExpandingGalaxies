@@ -29,11 +29,16 @@ public class PseudoRandomPlayerExample : MonoBehaviour
     void Update()
     {
 
+        if (Input.GetKeyDown(KeyCode.C))
+        {
+            print(PRE.activeStarCount);
+        }
+
         getPositionsInRadius(distanceToLoad * chunkWidth);
 
         for (int i = 0; i < loadedPositions.Count; i++)
         {
-            if (Vector3.Distance(transform.position, loadedPositions[i] * (int)chunkWidth) > distanceToDestroy * chunkWidth)
+            if (Vector3.Distance(transform.position, loadedPositions[i] * (int)chunkWidth) > distanceToDestroy * chunkWidth/2)
             {
                 PRE.DestroyChunk(loadedPositions[i]);
                 loadedPositions.RemoveAt(i);

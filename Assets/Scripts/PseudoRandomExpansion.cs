@@ -48,7 +48,9 @@ public class PseudoRandomExpansion : MonoBehaviour
         GameObject[] starsInChunk = new GameObject[chunkStarCount];
         for (int i = 0; i < chunkStarCount; i++)
         {
-            SpawnStarFromPool(RandomInCube(chunkWidth) + (Vector3)pos * chunkWidth);
+            starsInChunk[i] = SpawnStarFromPool(RandomInCube(chunkWidth) + (Vector3)pos * chunkWidth);
+            //starsInChunk[i].GetComponent<MeshRenderer>().material.SetColor("_EmissionColor", Random.ColorHSV(0,1,1,1,1,1));
+            //starsInChunk[i].transform.localScale *= Random.Range(1, 10);
             //starsInChunk[i] = Instantiate(star, RandomInCube(chunkWidth) + (Vector3)pos * chunkWidth, Quaternion.identity);
             //starsInChunk[i].transform.parent = starContainer.transform;
         }
@@ -71,9 +73,10 @@ public class PseudoRandomExpansion : MonoBehaviour
         }
 
         GameObject[] currChunk = chunkDictonary[pos];
-        foreach (GameObject star in currChunk)
+        for (int i = 0; i < currChunk.Length; i++)
         {
-            //star.SetActive(false);
+            currChunk[i].SetActive(false);
+            starPool.Enqueue(currChunk[i]);
             //Destroy(star);
         }
         chunkDictonary.Remove(pos);
@@ -123,13 +126,36 @@ public class PseudoRandomExpansion : MonoBehaviour
 
     GameObject SpawnStarFromPool(Vector3 position)
     {
+        if(starPool.Count == 0)
+        {
+            print("not enough stars");
+            return null;
+        }
+
         GameObject toSpawn = starPool.Dequeue();
         toSpawn.SetActive(true);
         toSpawn.transform.position = position;
 
-        starPool.Enqueue(toSpawn);
+        //starPool.Enqueue(toSpawn);
 
         return toSpawn;
+    }
+    public int activeStarCount
+    {
+        get
+        {
+            int count = 0;
+            foreach (GameObject[] stars in chunkDictonary.Values)
+            {
+                for (int i = 0; i < stars.Length; i++)
+                {
+                    if (stars[i].activeSelf)
+                        count++;
+                }
+            }
+            return count;
+        }
+
     }
 
 }
