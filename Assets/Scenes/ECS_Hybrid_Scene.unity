@@ -707,6 +707,12 @@ PrefabInstance:
       propertyPath: clusterRadiusScalar
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 3660901429534746225, guid: 3c32aa977983ec74ca93dfc984388f14,
+        type: 3}
+      propertyPath: cluster
+      value: 
+      objectReference: {fileID: 8680719596890487020, guid: 9df18694666804fbe9b89fa6cc12f48a,
+        type: 3}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 3c32aa977983ec74ca93dfc984388f14, type: 3}
 --- !u!1 &772577188
