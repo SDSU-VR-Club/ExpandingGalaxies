@@ -96,6 +96,7 @@ LightmapSettings:
     m_PVRFilteringAtrousPositionSigmaAO: 1
     m_ExportTrainingData: 0
     m_TrainingDataDestination: TrainingData
+    m_LightProbeSampleCountMultiplier: 4
   m_LightingDataAsset: {fileID: 0}
   m_UseShadowmask: 1
 --- !u!196 &4
@@ -175,7 +176,7 @@ PrefabInstance:
     - target: {fileID: 7784229239253335639, guid: 39ffb70cf1bbf6f4ab092c9e53f16750,
         type: 3}
       propertyPath: m_RootOrder
-      value: 5
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 7784229239253335639, guid: 39ffb70cf1bbf6f4ab092c9e53f16750,
         type: 3}
@@ -527,6 +528,7 @@ LineRenderer:
   m_MotionVectors: 0
   m_LightProbeUsage: 0
   m_ReflectionProbeUsage: 0
+  m_RayTracingMode: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -736,7 +738,7 @@ Transform:
   m_Children:
   - {fileID: 479221800}
   m_Father: {fileID: 0}
-  m_RootOrder: 4
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &855052889 stripped
 Transform:
@@ -769,8 +771,9 @@ Light:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 889535624}
   m_Enabled: 1
-  serializedVersion: 9
+  serializedVersion: 10
   m_Type: 1
+  m_Shape: 0
   m_Color: {r: 1, g: 0.95686275, b: 0.8392157, a: 1}
   m_Intensity: 1
   m_Range: 10
@@ -1087,11 +1090,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 772577189}
     m_Modifications:
-    - target: {fileID: 6567055088410307446, guid: 30837c0ef536b064ba4dd8f999910918,
-        type: 3}
-      propertyPath: m_Name
-      value: Player
-      objectReference: {fileID: 0}
     - target: {fileID: 6567055088409991950, guid: 30837c0ef536b064ba4dd8f999910918,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -1146,6 +1144,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6567055088410307446, guid: 30837c0ef536b064ba4dd8f999910918,
+        type: 3}
+      propertyPath: m_Name
+      value: Player
       objectReference: {fileID: 0}
     - target: {fileID: 479221801, guid: 30837c0ef536b064ba4dd8f999910918, type: 3}
       propertyPath: player
@@ -1389,6 +1392,7 @@ LineRenderer:
   m_MotionVectors: 0
   m_LightProbeUsage: 0
   m_ReflectionProbeUsage: 0
+  m_RayTracingMode: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -1480,52 +1484,6 @@ LineRenderer:
     generateLightingData: 0
   m_UseWorldSpace: 1
   m_Loop: 0
---- !u!1 &1802807139
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1802807141}
-  - component: {fileID: 1802807140}
-  m_Layer: 0
-  m_Name: ExpansionManager
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &1802807140
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1802807139}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3da2bc65b4d062d438258812023a3efe, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  speed: 0.001
-  acceleration: 0.0005
-  stars: []
---- !u!4 &1802807141
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1802807139}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_RootOrder: 3
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1893346130
 GameObject:
   m_ObjectHideFlags: 0
@@ -1652,7 +1610,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 6
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &1895086204 stripped
 Transform:
@@ -1786,7 +1744,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 7
+  m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &2021335662 stripped
 Transform:
@@ -1801,11 +1759,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 6612513131255668159, guid: cd965680df46cb34f95154d728cfdc6c,
-        type: 3}
-      propertyPath: m_Name
-      value: AudioManager
-      objectReference: {fileID: 0}
     - target: {fileID: 6612513131255668130, guid: cd965680df46cb34f95154d728cfdc6c,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -1877,6 +1830,11 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 24100000, guid: c15aafe32249da54a85348b4fabc89ae,
         type: 2}
+    - target: {fileID: 6612513131255668159, guid: cd965680df46cb34f95154d728cfdc6c,
+        type: 3}
+      propertyPath: m_Name
+      value: AudioManager
+      objectReference: {fileID: 0}
     - target: {fileID: 6612513131255668156, guid: cd965680df46cb34f95154d728cfdc6c,
         type: 3}
       propertyPath: OutputAudioMixerGroup
