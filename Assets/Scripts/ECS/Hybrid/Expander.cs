@@ -1,18 +1,21 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
-public class Expander : MonoBehaviour
+using Unity.Entities;
+namespace SpaceECS.Hybrid
 {
-    // Start is called before the first frame update
-    void Start()
+    [RequireComponent(typeof(GameObjectEntity))]
+    public class Expander : MonoBehaviour
     {
-        
+
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
+    class ExpanderSystem : ComponentSystem{
+        protected override void OnUpdate(){
+            float deltaTime = Time.deltaTime;
+            Entities.ForEach((Transform transform) =>{
+                transform += Vector3.normalize(transform) * 10 * deltaTime;
+            });
+        }
     }
 }
