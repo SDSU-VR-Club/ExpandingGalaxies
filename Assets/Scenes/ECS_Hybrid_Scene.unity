@@ -1200,6 +1200,10 @@ PrefabInstance:
       propertyPath: clusterMask.m_Bits
       value: 256
       objectReference: {fileID: 0}
+    - target: {fileID: 479221801, guid: 30837c0ef536b064ba4dd8f999910918, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 6536939300870304192, guid: 30837c0ef536b064ba4dd8f999910918,
         type: 3}
       propertyPath: clearanceCheckMask.m_Bits

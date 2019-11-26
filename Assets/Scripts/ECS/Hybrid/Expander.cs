@@ -12,7 +12,7 @@ namespace ECS.Hybrid
         protected override void OnUpdate(){
             float deltaTime = Time.deltaTime;
             Entities.ForEach((Expander e, Transform transform) =>{
-                transform.position += transform.position.normalized * .1f * deltaTime;
+                transform.position += transform.position.normalized * 2f * deltaTime;
             });
         }
     }
