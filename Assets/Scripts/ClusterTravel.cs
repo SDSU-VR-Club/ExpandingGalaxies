@@ -16,10 +16,14 @@ public class ClusterTravel : MonoBehaviour
     GameObject leftHighlighted;
     GameObject rightHighlighted;
     public LayerMask clusterMask;
+
+    public AudioClip PlanetSelect, TraversalSound, TraversalSoundLoop, ShepardDescending;
     // Start is called before the first frame update
     void Start()
     {
         player = startingPlayer;
+
+        AudioScript.instance.PlayMusic(ShepardDescending, 1.0f, true);
     }
 
     // Update is called once per frame
@@ -140,8 +144,18 @@ public class ClusterTravel : MonoBehaviour
         HitBoi.collider.enabled = false;
         lastCol = HitBoi.collider;
         player.parent = HitBoi.collider.transform;
-        AudioScript.instance.PlaySFX();
+        AudioScript.instance.PlaySFX1(PlanetSelect, 1.0f, false);
+        AudioScript.instance.PlaySFX2(TraversalSound, 1.0f, false);
+        StartCoroutine(StartTraversalLoop());
         HitBoi.collider.gameObject.GetComponent<CalcSpeedText>().StartShowText();
+    }
+
+    IEnumerator StartTraversalLoop()
+    {
+        yield return new WaitForSecondsRealtime(0.6f);
+        AudioScript.instance.PlaySFX1(TraversalSoundLoop, 1.0f, true);
+        yield return new WaitForSecondsRealtime(10f);
+        AudioScript.instance.StopTraversalSound();
     }
    
 }
