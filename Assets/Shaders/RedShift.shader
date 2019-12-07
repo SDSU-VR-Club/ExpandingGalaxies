@@ -3,8 +3,6 @@
     Properties
     {
         _MainTex ("Texture", 2D) = "white" {}
-        _CurrentDepthTexture("Current Depth", 2D) = "white" {}
-        _LastDepthTexture("Last Depth", 2D) = "white" {}
 	}
     SubShader
     {
@@ -40,23 +38,18 @@
             }
 
             sampler2D _MainTex;
-			sampler2D _CurrentDepthTexture;
-            sampler2D _LastDepthTexture;
+			sampler2D _CameraDepthTexture;
 
             fixed4 frag (v2f i) : SV_Target
             {
                 fixed4 col = tex2D(_MainTex, i.uv);
-                
-                float depth = tex2D(_CurrentDepthTexture, i.uv).rgb;
-                float lastDepth = tex2D(_LastDepthTexture, i.uv).rgb;
+                float depth = tex2D(_CameraDepthTexture, i.uv).rgb * 2000;
+                //if(depth == -1)
+                   // return col;
 
-                float diff = (depth - lastDepth);
-                               
-                col.r += diff;
-                col.g -= diff;
-                col.b -= diff;
-
-                return 1-diff;
+                col.g = depth;
+                col.b = depth;
+                return col;
             }
             ENDCG
         }
