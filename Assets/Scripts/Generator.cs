@@ -39,7 +39,7 @@ public class Universe : MonoBehaviour
     //private Vector3 currentCord, prevCord;
     //private float clusterScaleScalar = 20;
     //private int planetAmount = 20;
-
+    public List<Transform> clusters;
     //constructor that generates all game objects within the universe (universe->clusters->(stars?) in clusters)
     public Universe(GameObject cluster, int seed, float clusterScalar, float innerRadius,float outerRadius,int clusterCount)
     {
@@ -48,8 +48,8 @@ public class Universe : MonoBehaviour
         clusterParent.name = "clusters";
         //create the seed as per user input seed value ( same seed = same generation )
         Random.InitState(seed);
-
-        List<Transform> clusters = new List<Transform>();
+        clusters = new List<Transform>();
+        
         //players radius surrounding them (area of no spawn for clusters)
         //Vector3 playerRadiusVector = new Vector3(playerRadius, playerRadius, playerRadius);
         //Debug.Log(playerRadiusVector);
@@ -94,6 +94,6 @@ public class Universe : MonoBehaviour
                 ++currentSpawn;
             }
         }
-        FindObjectOfType<ExpansionManager>().stars = clusters;
+//        FindObjectOfType<ExpansionManager>().stars = clusters;
     }
 }
