@@ -20,11 +20,10 @@ public class Generator : MonoBehaviour
     //object prefab to spawn in universe
     public GameObject cluster;
 
-    [HideInInspector]
     public Universe currentUniverse;
-    void Start()
+    void Awake()
     {
-        Universe testUniverse = new Universe(cluster, seed, clusterRadiusScalar, innerRadius, outerRadius,clusterCount);
+        currentUniverse = new Universe(cluster, seed, clusterRadiusScalar, innerRadius, outerRadius,clusterCount);
         
     }
    

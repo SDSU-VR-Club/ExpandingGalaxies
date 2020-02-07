@@ -13,6 +13,7 @@ public class ExpansionManager : MonoBehaviour
     void Start()
     {
         center = transform;
+        stars = FindObjectOfType<Generator>().currentUniverse.clusters;
     }
 
     void Update()

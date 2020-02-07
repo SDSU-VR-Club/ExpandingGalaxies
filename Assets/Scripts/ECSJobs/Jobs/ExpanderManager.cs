@@ -24,12 +24,10 @@ namespace ECS.Jobs{
         ExpanderJob expanderJobs;
         TransformAccessArray transforms;
         JobHandle expanderHandle;
-        Universe uni;
-
+        public Generator gen;
 
         void Start(){
             transforms = new TransformAccessArray(0, -1);
-            uni = FindObjectOfType<Universe>();
             SetStars();
         }
 
@@ -39,7 +37,7 @@ namespace ECS.Jobs{
 
             ExpanderJob job = new ExpanderJob(){
                 deltaTime = Time.deltaTime,
-                direction = Vector3.back
+                direction = Vector3.up
             };
 
             expanderHandle = job.Schedule(transforms);
@@ -47,8 +45,9 @@ namespace ECS.Jobs{
         }
 
         void SetStars(){
-            transforms.capacity = uni.clusters.Count;
-            transforms.SetTransforms(uni.clusters.ToArray());
+            expanderHandle.Complete();
+            transforms.capacity = gen.currentUniverse.clusters.Count;
+            transforms.SetTransforms(gen.currentUniverse.clusters.ToArray());
         }
 
     }
