@@ -9,8 +9,9 @@ public class Chunk : MonoBehaviour
     
     //Size is a function of Time
     public Vector3 size = Vector3.zero;
-    
     public Vector3Int chunk;
+
+    private float time;
 
     // Start is called before the first frame update
     void Start(){
@@ -22,12 +23,26 @@ public class Chunk : MonoBehaviour
 
     }
 
+    //Changes the chunk to a new index
+    public void ShiftChunk(Vector3Int direction){
+        chunk += direction;
+        GenerateChunk();
+    }
+
+    //Run for the scaling update
     public void UpdateChunk(float time){
+        this.time = time;
         //Use Preferred RNG method here
         size = new Vector3(time, time, time);
     }
 
+    void ClearChunk(){
+        //Make sure we have stuff to clean up before we do.
+    }
+
     void GenerateChunk(){
+        ClearChunk();
+
         //Do setup for the clusters
     }
 

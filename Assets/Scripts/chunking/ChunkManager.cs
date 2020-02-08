@@ -17,16 +17,16 @@ public class ChunkManager : MonoBehaviour
         }
 
         set{
-            if(_shellCount == value){
+            if( (_shellCount == value) || (value > maxShellCount) ){
                 return;
             }
             print("shell count value was changed");
             _shellCount = Mathf.Clamp(value, 1, maxShellCount);
             GenerateChunks();
-
         }
     }
 
+    [Range(0, 5)]
     public float time = 1;
 
     Chunk[,,] chunks;
@@ -50,7 +50,7 @@ public class ChunkManager : MonoBehaviour
             for(int j = -shellCount; j <= shellCount; j++){
                 for(int k = -shellCount; k <= shellCount; k++){
                     int ii = i + shellCount, ij = j + shellCount, ik = k + shellCount;
-                    chunks[ii, ij, ik].transform.position = new Vector3(i, j, k) * time;
+                    chunks[ii, ij, ik].transform.position = this.transform.position + new Vector3(i, j, k) * time;
                     chunks[ii, ij, ik].UpdateChunk(time);
                 }
             }
