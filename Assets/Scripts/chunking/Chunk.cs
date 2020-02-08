@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-[ExecuteInEditMode]
 public class Chunk : MonoBehaviour
 {
     public int seed;
@@ -23,7 +22,7 @@ public class Chunk : MonoBehaviour
 
     }
 
-    public virtual void UpdateChunk(float time){
+    public void UpdateChunk(float time){
         //Use Preferred RNG method here
         size = new Vector3(time, time, time);
     }
