@@ -3,9 +3,11 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Jobs;
 using Unity.Jobs;
+using Unity.Burst;
 
 namespace ECS.Jobs{
     
+    [BurstCompile]
     public struct ExpanderJob : IJobParallelForTransform{
 
         public float deltaTime;
