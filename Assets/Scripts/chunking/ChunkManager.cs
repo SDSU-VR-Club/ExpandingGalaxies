@@ -11,7 +11,7 @@ public class ChunkManager : MonoBehaviour
 
     //TODO :: Frustrum Culling
     //TODO :: Use Jobs to increase Performance
-    
+
     //NOTE :: Shells are very expensive, each layer costs n^3 computing
 
     public int _shellCount = 1;
@@ -82,7 +82,8 @@ public class ChunkManager : MonoBehaviour
         }
 
         chunks = new Chunk[shellCount * 2 + 1, shellCount * 2 + 1, shellCount * 2 + 1];
-
+        
+        //TODO :: USE Jobs!!
         //Generate the new chunks for our renderDistance
         for(int i = -shellCount; i <= shellCount; i++){
             for(int j = -shellCount; j <= shellCount; j++){
