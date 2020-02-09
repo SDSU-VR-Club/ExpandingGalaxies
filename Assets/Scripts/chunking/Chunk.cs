@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+//TODO :: Use Jobs to increase performance
 public class Chunk : MonoBehaviour
 {
     public int seed;
@@ -37,6 +38,10 @@ public class Chunk : MonoBehaviour
     }
 
     void ClearChunk(){
+        //TODO :: Use Pooling
+        for(int i = 0; i < clusters.Length; i++){
+            
+        }
         //Make sure we have stuff to clean up before we do.
     }
 

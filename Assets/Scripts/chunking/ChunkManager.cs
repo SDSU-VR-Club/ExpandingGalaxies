@@ -2,13 +2,17 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+
 public class ChunkManager : MonoBehaviour
 {
     public int renderDistance = 1;
     public int maxShellCount = 4;
     //Shell count is a function of renderDistance and chunkSize
 
-    //TODO Frustrum Culling
+    //TODO :: Frustrum Culling
+    //TODO :: Use Jobs to increase Performance
+    
+    //NOTE :: Shells are very expensive, each layer costs n^3 computing
 
     public int _shellCount = 1;
     public int shellCount{
@@ -59,10 +63,12 @@ public class ChunkManager : MonoBehaviour
 
     //Caculate the number of shells needed for the desired render distance
     void CalculateShells(){
-        shellCount = Mathf.RoundToInt(renderDistance/time);
+        shellCount = Mathf.CeilToInt(renderDistance/time);
     }
 
     void GenerateChunks(){
+
+        //TODO :: Only trash the GameObjects that need to be deleted
         if(chunks != null){
             //Clear any chindren we currently have
             for(int i = 0; i < chunks.GetLength(0); i++){
