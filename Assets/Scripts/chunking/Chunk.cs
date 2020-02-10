@@ -9,6 +9,17 @@ public class Chunk : MonoBehaviour
     //Size is a function of Time
     public Vector3 size = Vector3.zero;
     public Vector3Int chunkID;
+    bool chunksGenerated = false;
+    bool _isVisible = false;
+    public bool isVisible{
+        get{return _isVisible;}
+        set{
+            _isVisible = value;
+            if(_isVisible && !chunksGenerated){
+                GenerateChunk(); //Only run if the chunks have not been generated and we are visible now
+            }
+        }
+    }
 
     private float time;
 
@@ -17,7 +28,9 @@ public class Chunk : MonoBehaviour
     public void ShiftChunk(Vector3Int direction){
         chunkID += direction;
         this.transform.name = "" + chunkID;
-        GenerateChunk();
+        chunksGenerated = false;
+        if(isVisible)
+            GenerateChunk(); //Only update the chunks we can see right now
     }
 
     //Run for the scaling update
@@ -33,9 +46,13 @@ public class Chunk : MonoBehaviour
 
     public virtual void GenerateChunk(){
         //Do setup for the clusters
+        chunksGenerated = true;
     }
 
     void OnDrawGizmos(){
+        Gizmos.color = Color.white;
+        if(!isVisible)
+            Gizmos.color = Color.red;
         Gizmos.DrawWireCube(this.transform.position, size);
     }
 }
