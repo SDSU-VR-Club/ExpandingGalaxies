@@ -10,7 +10,8 @@ public class ChunkManager : MonoBehaviour
     //Shell count is a function of renderDistance and chunkSize
 
     //TODO :: Frustrum Culling
-    //TODO :: Use Jobs to increase Performance
+    //Turns out you cannot use jobs here :(
+            //Guess we are gonna use corutines instead
 
     //NOTE :: Shells are very expensive, each layer costs n^3 computing
 
@@ -101,7 +102,8 @@ public class ChunkManager : MonoBehaviour
 
         chunks = new Chunk[shellCount * 2 + 1, shellCount * 2 + 1, shellCount * 2 + 1];
         
-        //TODO :: USE Jobs!!
+        //Turns out you cannot use jobs here :(
+            //Guess we are gonna use corutines instead
         //Generate the new chunks for our renderDistance
         for(int i = -shellCount; i <= shellCount; i++){
             for(int j = -shellCount; j <= shellCount; j++){
@@ -121,12 +123,5 @@ public class ChunkManager : MonoBehaviour
                 }
             }
         }
-    }
-}
-
-public struct ChunkJob : IJob{
-
-    void Execute(){
-        
     }
 }
