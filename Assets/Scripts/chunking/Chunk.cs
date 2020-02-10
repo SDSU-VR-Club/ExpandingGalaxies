@@ -16,6 +16,7 @@ public class Chunk : MonoBehaviour
     //TODO :: USE POOLING!!!
     public void ShiftChunk(Vector3Int direction){
         chunkID += direction;
+        this.transform.name = "" + chunkID;
         GenerateChunk();
     }
 

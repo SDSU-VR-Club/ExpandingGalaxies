@@ -22,9 +22,15 @@ public class ChunkManager : MonoBehaviour
         }
 
         set{
-            if( (_shellCount == value) || (value > maxShellCount) ){
+            
+            if(value > maxShellCount){
+                value = maxShellCount;    
+            }
+
+            if( (_shellCount == value) ){
                 return;
             }
+
             print("shell count value was changed");
             _shellCount = Mathf.Clamp(value, 1, maxShellCount);
             StopCoroutine(generator);
@@ -34,7 +40,7 @@ public class ChunkManager : MonoBehaviour
 
     public float time = 1;
 
-    List<Chunk> chunks;
+    Dictionary<Vector3Int, Chunk> chunks; //RelativePosition
 
     public Vector3Int currentChunkID;
 
@@ -43,7 +49,7 @@ public class ChunkManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        chunks = new List<Chunk>();
+        chunks = new Dictionary<Vector3Int, Chunk>();
         StartCoroutine(generator = GenerateChunks());
     }
 
@@ -61,16 +67,16 @@ public class ChunkManager : MonoBehaviour
     }
 
     void ShiftChunk(Vector3Int direction){
-        for(int i = 0; i < chunks.Count; i++){
-            chunks[i].ShiftChunk(direction);
-        }
+        foreach(Chunk chunk in chunks.Values){
+            chunk.ShiftChunk(direction);
+        }   
     }
 
     void UpdateChunks(){
-        for(int i = 0; i < chunks.Count; i++){
-            Vector3 pos = (Vector3)(currentChunkID - chunks[i].chunkID);
-            chunks[i].transform.position = this.transform.position + pos * time;
-            chunks[i].UpdateChunk(time);
+        foreach(Chunk chunk in chunks.Values){
+            Vector3 pos = (Vector3)(currentChunkID - chunk.chunkID);
+            chunk.transform.position = this.transform.position + pos * time;
+            chunk.UpdateChunk(time);
         }
     }
 
@@ -78,42 +84,41 @@ public class ChunkManager : MonoBehaviour
     void CalculateShells(){
         shellCount = Mathf.CeilToInt(renderDistance/time);
     }
+    
     IEnumerator generator;
-
     IEnumerator GenerateChunks(){
         //TODO :: Only trash the GameObjects that need to be deleted
         if(chunks != null){
-            for(int i = 0; i < chunks.Count; i++){
-                if(chunks[i] != null){
-                    GameObject.DestroyImmediate(chunks[i].gameObject);
+            foreach(Chunk chunk in chunks.Values){
+                if(chunk != null){
+                    chunk.gameObject.SetActive(false);
                 }
             }
         }
 
-        chunks.Clear();
-        
-        //Turns out you cannot use jobs here :(
-            //Guess we are gonna use corutines instead
         //Generate the new chunks for our renderDistance
         for(int i = -shellCount; i <= shellCount; i++){
             for(int j = -shellCount; j <= shellCount; j++){
                 for(int k = -shellCount; k <= shellCount; k++){
-                    // calculate the indexes, i prefece meaning "index"
-                    int ii = i + shellCount, ij = j + shellCount, ik = k + shellCount;
-                    //You cannot instantiate with Job system
+                    Vector3Int relativePosition = new Vector3Int(i, j, k);
+                    if(chunks.ContainsKey(relativePosition)){
+                        //Since we already have it, just re-enable it
+                        chunks[relativePosition].gameObject.SetActive(true);
+                        continue;
+                    }
+
+                    //This is the setup for a new chunk
                     GameObject go = new GameObject();
                     Chunk chunk = go.AddComponent<Chunk>();
-                    chunks.Add(chunk);
-                    go.transform.position = new Vector3(i, j, k);
-                    go.transform.name = "chunk (" + i + "," + j + "," + k + ")"; 
-                    chunk.chunkID = new Vector3Int(i, j, k);
+                    chunks.Add(relativePosition, chunk);
+                    go.transform.position = relativePosition;
+                    go.transform.name = "" + relativePosition + currentChunkID; 
+                    chunk.chunkID = relativePosition + currentChunkID;
                     go.transform.parent = this.transform;
                     chunk.UpdateChunk(time);
                     //chunk.GenerateChunk();
-                    
                 } 
             }
-            yield return null;
         }
         yield return null;
     }
