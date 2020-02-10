@@ -30,12 +30,14 @@ public class ChunkManager : MonoBehaviour
         }
     }
 
-    [Range(0, 5)]
     public float time = 1;
 
     Chunk[,,] chunks;
+
     public Vector3Int currentChunk;
 
+    //TODO :: Delete this part
+    public Vector3Int lastChunk;
     // Start is called before the first frame update
     void Start()
     {
@@ -47,6 +49,22 @@ public class ChunkManager : MonoBehaviour
     {
         CalculateShells();
         UpdateChunks();
+
+        Vector3Int diff = lastChunk - currentChunk;
+        if(diff != Vector3Int.zero){
+            lastChunk = currentChunk;
+            ShiftChunk(diff);
+        }
+    }
+
+    void ShiftChunk(Vector3Int direction){
+        for(int i = 0; i < chunks.GetLength(0); i++){
+            for(int j = 0; j < chunks.GetLength(1); j++){
+                for(int k = 0; k < chunks.GetLength(2); k++){
+                    chunks[i,j,k].ShiftChunk(direction);
+                }
+            }
+        }
     }
 
     void UpdateChunks(){
@@ -92,14 +110,23 @@ public class ChunkManager : MonoBehaviour
                     int ii = i + shellCount, ij = j + shellCount, ik = k + shellCount;
 
                     GameObject go = new GameObject();
-                    Chunk chunk = go.AddComponent<Chunk>();
+                    PerlinNoiseChunk chunk = go.AddComponent<PerlinNoiseChunk>();
                     chunks[ii, ij, ik] = chunk;
                     go.transform.position = new Vector3(i, j, k);
                     go.transform.name = "chunk (" + i + "," + j + "," + k + ")"; 
                     chunk.chunk = new Vector3Int(i, j, k);
                     go.transform.parent = this.transform;
+                    chunk.UpdateChunk(time);
+                    //chunk.GenerateChunk();
                 }
             }
         }
+    }
+}
+
+public struct ChunkJob : IJob{
+
+    void Execute(){
+        
     }
 }
