@@ -50,7 +50,7 @@ public class ChunkManager : MonoBehaviour
     void Start()
     {
         chunks = new Dictionary<Vector3Int, Chunk>();
-        StartCoroutine(CubicChunkGenerator());
+        StartCoroutine(generator = CubicChunkGenerator());
         
         //Need the camera for the frustum culling
         cam = Camera.main;
@@ -97,6 +97,7 @@ public class ChunkManager : MonoBehaviour
         shellCount = Mathf.CeilToInt(renderDistance/time);
     }
 
+    IEnumerator generator;
     //Generates chunks arount (0,0,0) in the shape of a cube
     IEnumerator CubicChunkGenerator(){
         if(chunks != null){
