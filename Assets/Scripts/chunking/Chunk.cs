@@ -8,14 +8,14 @@ public class Chunk : MonoBehaviour
 {   
     //Size is a function of Time
     public Vector3 size = Vector3.zero;
-    public Vector3Int chunk;
+    public Vector3Int chunkID;
 
     private float time;
 
     //Changes the chunk to a new index
     //TODO :: USE POOLING!!!
     public void ShiftChunk(Vector3Int direction){
-        chunk += direction;
+        chunkID += direction;
         GenerateChunk();
     }
 

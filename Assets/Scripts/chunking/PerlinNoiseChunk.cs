@@ -20,9 +20,9 @@ public class PerlinNoiseChunk : Chunk
                 for(float k = 0; k < resolution; k+= size.z/resolution){
 
                     //print(Perlin.Noise(chunk.x * resolution + i, chunk.y * resolution + j, chunk.z * resolution + k));
-                    print(Perlin.Noise(chunk.x + i/size.x, chunk.y + j/size.y, chunk.z + k/size.z));
+                    print(Perlin.Noise(chunkID.x + i/size.x, chunkID.y + j/size.y, chunkID.z + k/size.z));
 
-                    if(Mathf.Abs(Perlin.Noise(chunk.x + i/size.x, chunk.y + j/size.y, chunk.z + k/size.z)) > .5){
+                    if(Mathf.Abs(Perlin.Noise(chunkID.x + i/size.x, chunkID.y + j/size.y, chunkID.z + k/size.z)) > .5){
                         GameObject go = GameObject.CreatePrimitive(PrimitiveType.Cube);
                         GameObject.DestroyImmediate(go.GetComponent<Collider>());
                         go.transform.parent = this.transform;

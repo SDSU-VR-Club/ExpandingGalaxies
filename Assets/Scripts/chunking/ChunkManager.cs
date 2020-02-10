@@ -27,22 +27,24 @@ public class ChunkManager : MonoBehaviour
             }
             print("shell count value was changed");
             _shellCount = Mathf.Clamp(value, 1, maxShellCount);
-            GenerateChunks();
+            StopCoroutine(generator);
+            StartCoroutine(generator = GenerateChunks());
         }
     }
 
     public float time = 1;
 
-    Chunk[,,] chunks;
+    List<Chunk> chunks;
 
-    public Vector3Int currentChunk;
+    public Vector3Int currentChunkID;
 
     //TODO :: Delete this part
-    public Vector3Int lastChunk;
+    public Vector3Int lastChunkID;
     // Start is called before the first frame update
     void Start()
     {
-        GenerateChunks();
+        chunks = new List<Chunk>();
+        StartCoroutine(generator = GenerateChunks());
     }
 
     // Update is called once per frame
@@ -51,32 +53,24 @@ public class ChunkManager : MonoBehaviour
         CalculateShells();
         UpdateChunks();
 
-        Vector3Int diff = lastChunk - currentChunk;
+        Vector3Int diff = lastChunkID - currentChunkID;
         if(diff != Vector3Int.zero){
-            lastChunk = currentChunk;
+            lastChunkID = currentChunkID;
             ShiftChunk(diff);
         }
     }
 
     void ShiftChunk(Vector3Int direction){
-        for(int i = 0; i < chunks.GetLength(0); i++){
-            for(int j = 0; j < chunks.GetLength(1); j++){
-                for(int k = 0; k < chunks.GetLength(2); k++){
-                    chunks[i,j,k].ShiftChunk(direction);
-                }
-            }
+        for(int i = 0; i < chunks.Count; i++){
+            chunks[i].ShiftChunk(direction);
         }
     }
 
     void UpdateChunks(){
-        for(int i = -shellCount; i <= shellCount; i++){
-            for(int j = -shellCount; j <= shellCount; j++){
-                for(int k = -shellCount; k <= shellCount; k++){
-                    int ii = i + shellCount, ij = j + shellCount, ik = k + shellCount;
-                    chunks[ii, ij, ik].transform.position = this.transform.position + new Vector3(i, j, k) * time;
-                    chunks[ii, ij, ik].UpdateChunk(time);
-                }
-            }
+        for(int i = 0; i < chunks.Count; i++){
+            Vector3 pos = (Vector3)(currentChunkID - chunks[i].chunkID);
+            chunks[i].transform.position = this.transform.position + pos * time;
+            chunks[i].UpdateChunk(time);
         }
     }
 
@@ -84,23 +78,19 @@ public class ChunkManager : MonoBehaviour
     void CalculateShells(){
         shellCount = Mathf.CeilToInt(renderDistance/time);
     }
+    IEnumerator generator;
 
-    void GenerateChunks(){
-
+    IEnumerator GenerateChunks(){
         //TODO :: Only trash the GameObjects that need to be deleted
         if(chunks != null){
-            //Clear any chindren we currently have
-            for(int i = 0; i < chunks.GetLength(0); i++){
-                for(int j = 0; j < chunks.GetLength(1); j++){
-                    for(int k = 0; k < chunks.GetLength(2); k++){
-                        if(chunks[i,j,k] != null) 
-                            GameObject.DestroyImmediate(chunks[i, j, k].transform.gameObject);
-                    }
+            for(int i = 0; i < chunks.Count; i++){
+                if(chunks[i] != null){
+                    GameObject.DestroyImmediate(chunks[i].gameObject);
                 }
             }
         }
 
-        chunks = new Chunk[shellCount * 2 + 1, shellCount * 2 + 1, shellCount * 2 + 1];
+        chunks.Clear();
         
         //Turns out you cannot use jobs here :(
             //Guess we are gonna use corutines instead
@@ -110,18 +100,22 @@ public class ChunkManager : MonoBehaviour
                 for(int k = -shellCount; k <= shellCount; k++){
                     // calculate the indexes, i prefece meaning "index"
                     int ii = i + shellCount, ij = j + shellCount, ik = k + shellCount;
-
+                    //You cannot instantiate with Job system
                     GameObject go = new GameObject();
-                    PerlinNoiseChunk chunk = go.AddComponent<PerlinNoiseChunk>();
-                    chunks[ii, ij, ik] = chunk;
+                    Chunk chunk = go.AddComponent<Chunk>();
+                    chunks.Add(chunk);
                     go.transform.position = new Vector3(i, j, k);
                     go.transform.name = "chunk (" + i + "," + j + "," + k + ")"; 
-                    chunk.chunk = new Vector3Int(i, j, k);
+                    chunk.chunkID = new Vector3Int(i, j, k);
                     go.transform.parent = this.transform;
                     chunk.UpdateChunk(time);
                     //chunk.GenerateChunk();
-                }
+                    
+                } 
             }
+            yield return null;
         }
+        yield return null;
     }
+
 }
