@@ -5,6 +5,9 @@ using UnityEngine;
 
 public class ChunkManager : MonoBehaviour
 {
+    public enum GenerationMethod {Cuboidal, Spherical}
+
+    public GenerationMethod generationMethod;
     public int renderDistance = 1;
     public int maxShellCount = 4;
 
@@ -30,7 +33,7 @@ public class ChunkManager : MonoBehaviour
             print("shell count value was changed");
             _shellCount = Mathf.Clamp(value, 1, maxShellCount);
             StopCoroutine(generator);
-            StartCoroutine(generator = CubicChunkGenerator());
+            StartCoroutine(generator = Generator(generationMethod));
         }
     }
 
@@ -50,7 +53,7 @@ public class ChunkManager : MonoBehaviour
     void Start()
     {
         chunks = new Dictionary<Vector3Int, Chunk>();
-        StartCoroutine(generator = CubicChunkGenerator());
+        StartCoroutine(generator = Generator(generationMethod));
         
         //Need the camera for the frustum culling
         cam = Camera.main;
@@ -87,6 +90,10 @@ public class ChunkManager : MonoBehaviour
 
     //Lets the chunks know if they are visible, so we don't have to do work on them
     void FrustrumCulling(){
+        //TODO :: Calculate which are visible instead of if they are visible
+        //TODO :: this lets us only have the GameObjects exist that we can see
+        //TODO :: instead of having them exist just not enabled
+
         foreach(Chunk chunk in chunks.Values){
             chunk.isVisible = IsVisibleFrom(new Bounds(chunk.transform.position, chunk.size), cam);
         }
@@ -98,6 +105,18 @@ public class ChunkManager : MonoBehaviour
     }
 
     IEnumerator generator;
+    IEnumerator Generator(GenerationMethod method){
+        switch(method){
+            case GenerationMethod.Cuboidal:
+            yield return StartCoroutine(CubicChunkGenerator());
+            break;
+
+            case GenerationMethod.Spherical:
+            yield return StartCoroutine(SphericalChunkGenerator());
+            break;
+        }
+    }
+
     //Generates chunks arount (0,0,0) in the shape of a cube
     IEnumerator CubicChunkGenerator(){
         if(chunks != null){
@@ -136,7 +155,47 @@ public class ChunkManager : MonoBehaviour
     }
 
     IEnumerator SphericalChunkGenerator(){
-        //TODO :: Implement
+        if(chunks != null){
+            foreach(Chunk chunk in chunks.Values){
+                if(chunk != null){
+                    chunk.gameObject.SetActive(false); //Save those objects for later
+                }
+            }
+        }
+
+        //Generate the new chunks for our renderDistance
+        for(int i = -shellCount; i <= shellCount; i++){
+            for(int j = -shellCount; j <= shellCount; j++){
+                for(int k = -shellCount; k <= shellCount; k++){
+                    Vector3Int relativePosition = new Vector3Int(i, j, k);
+                    if(chunks.ContainsKey(relativePosition)){
+                        //Since we already have it, just re-enable it
+                        chunks[relativePosition].gameObject.SetActive(true);
+                        continue;
+                    }
+
+                    if(Vector3.Distance(Vector3.zero, (Vector3)relativePosition) > renderDistance)
+                        continue;
+
+                    //This is the setup for a new chunk
+                    GameObject go = new GameObject();
+                    Chunk chunk = go.AddComponent<Chunk>();
+                    chunks.Add(relativePosition, chunk);
+                    go.transform.position = relativePosition;
+                    go.transform.name = "" + relativePosition + currentChunkID; 
+                    chunk.chunkID = relativePosition + currentChunkID;
+                    go.transform.parent = this.transform;
+                    chunk.UpdateChunk(time);
+                    //chunk.GenerateChunk();
+                } 
+            }
+        }
+        yield return null;
+    }
+
+    //TODO :: Only generate the chunks that we actually can see
+    //TODO :: Also only have the minimum number of chunks needed from our FOV
+    IEnumerator FrustrumChunkGenerator(){
         yield return null;
     }
 

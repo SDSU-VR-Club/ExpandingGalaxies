@@ -15,6 +15,15 @@ public class Chunk : MonoBehaviour
         get{return _isVisible;}
         set{
             _isVisible = value;
+            if(!_isVisible){
+                this.gameObject.SetActive(false);
+                return;
+            }
+
+            if(_isVisible && !this.gameObject.activeSelf){
+                this.gameObject.SetActive(true);
+            }
+            
             if(_isVisible && !chunksGenerated){
                 GenerateChunk(); //Only run if the chunks have not been generated and we are visible now
             }
