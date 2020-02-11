@@ -1,7 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+using Unity.Jobs;
 
 public class ChunkManager : MonoBehaviour
 {
@@ -48,10 +48,14 @@ public class ChunkManager : MonoBehaviour
     //TODO :: Delete this part, testing purposes only
     Vector3Int lastChunkID;
 
+    Transform chunksParent;
 
     // Start is called before the first frame update
     void Start()
     {
+        chunksParent = new GameObject().transform;
+        chunksParent.parent = this.transform;
+        chunksParent.name = "Chunks";
         chunks = new Dictionary<Vector3Int, Chunk>();
         StartCoroutine(generator = Generator(generationMethod));
         
@@ -80,8 +84,12 @@ public class ChunkManager : MonoBehaviour
         }   
     }
 
+    //Make this a Job
     void UpdateChunks(){
         foreach(Chunk chunk in chunks.Values){
+            if(!chunk.isVisible){
+                continue;
+            }
             Vector3 pos = (Vector3)(currentChunkID - chunk.chunkID);
             chunk.transform.position = this.transform.position + pos * time;
             chunk.UpdateChunk(time);
@@ -89,13 +97,15 @@ public class ChunkManager : MonoBehaviour
     }
 
     //Lets the chunks know if they are visible, so we don't have to do work on them
+    //Turns out this is killing my FPS
     void FrustrumCulling(){
-        //TODO :: Calculate which are visible instead of if they are visible
+        //TODO :: Calculate which should be visible instead of if they are visible
         //TODO :: this lets us only have the GameObjects exist that we can see
         //TODO :: instead of having them exist just not enabled
 
         foreach(Chunk chunk in chunks.Values){
-            chunk.isVisible = IsVisibleFrom(new Bounds(chunk.transform.position, chunk.size), cam);
+            Vector3 pos = (Vector3)(currentChunkID - chunk.chunkID);
+            chunk.isVisible = IsVisibleFrom(new Bounds(this.transform.position + pos * time, new Vector3(time, time, time)), cam);
         }
     }
 
@@ -145,7 +155,7 @@ public class ChunkManager : MonoBehaviour
                     go.transform.position = relativePosition;
                     go.transform.name = "" + relativePosition + currentChunkID; 
                     chunk.chunkID = relativePosition + currentChunkID;
-                    go.transform.parent = this.transform;
+                    go.transform.parent = chunksParent.transform;
                     chunk.UpdateChunk(time);
                     //chunk.GenerateChunk();
                 } 
@@ -184,7 +194,7 @@ public class ChunkManager : MonoBehaviour
                     go.transform.position = relativePosition;
                     go.transform.name = "" + relativePosition + currentChunkID; 
                     chunk.chunkID = relativePosition + currentChunkID;
-                    go.transform.parent = this.transform;
+                    go.transform.parent = chunksParent.transform;
                     chunk.UpdateChunk(time);
                     //chunk.GenerateChunk();
                 } 
@@ -208,4 +218,11 @@ public class ChunkManager : MonoBehaviour
 		return GeometryUtility.TestPlanesAABB(planes, bounds);
 	}
 
+}
+
+public struct FrustrumCheckJob : IJobParallelFor{
+
+    public void Execute(int index){
+
+    }
 }

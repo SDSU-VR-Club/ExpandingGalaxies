@@ -244,7 +244,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   generationMethod: 1
   renderDistance: 1
-  maxShellCount: 6
+  maxShellCount: 7
   time: 1
   currentChunkID: {x: 0, y: 0, z: 0}
 --- !u!4 &432083833

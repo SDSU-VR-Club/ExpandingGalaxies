@@ -10,18 +10,18 @@ public class Chunk : MonoBehaviour
     public Vector3 size = Vector3.zero;
     public Vector3Int chunkID;
     bool chunksGenerated = false;
-    bool _isVisible = false;
+    bool _isVisible = true;
     public bool isVisible{
         get{return _isVisible;}
         set{
             _isVisible = value;
             if(!_isVisible){
-                this.gameObject.SetActive(false);
+                //this.gameObject.SetActive(false);
                 return;
             }
 
             if(_isVisible && !this.gameObject.activeSelf){
-                this.gameObject.SetActive(true);
+                //this.gameObject.SetActive(true);
             }
             
             if(_isVisible && !chunksGenerated){
