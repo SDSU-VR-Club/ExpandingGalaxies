@@ -1,6 +1,8 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Unity.Jobs;
+using UnityEngine.Jobs;
 
 //TODO :: Use Jobs to increase performance
 //TODO :: Just Use pooling you dummy
@@ -9,8 +11,14 @@ public class Chunk : MonoBehaviour
     //Size is a function of Time
     public Vector3 size = Vector3.zero;
     public Vector3Int chunkID;
+
+    TransformAccessArray clusters;
+    Vector3[] positions;
+    JobHandle clusterHandle;
+
     bool chunksGenerated = false;
-    bool _isVisible = true;
+    bool _isVisible = false;
+
     public bool isVisible{
         get{return _isVisible;}
         set{
@@ -18,10 +26,6 @@ public class Chunk : MonoBehaviour
             if(!_isVisible){
                 //this.gameObject.SetActive(false);
                 return;
-            }
-
-            if(_isVisible && !this.gameObject.activeSelf){
-                //this.gameObject.SetActive(true);
             }
             
             if(_isVisible && !chunksGenerated){
@@ -38,14 +42,21 @@ public class Chunk : MonoBehaviour
         chunkID += direction;
         this.transform.name = "" + chunkID;
         chunksGenerated = false;
-        if(isVisible)
-            GenerateChunk(); //Only update the chunks we can see right now
+
+        //Should only need an Update
+        UpdateChunk(time);
     }
 
     //Run for the scaling update
     public virtual void UpdateChunk(float time){
         this.time = time;
         size = new Vector3(time, time, time);
+        
+        clusterHandle.Complete();
+        ChunkUpdateJob job = new ChunkUpdateJob(){
+            size = time,
+            positions = this.positions
+        };
     }
 
     public virtual void ClearChunk(){
@@ -56,12 +67,29 @@ public class Chunk : MonoBehaviour
     public virtual void GenerateChunk(){
         //Do setup for the clusters
         chunksGenerated = true;
+
+        //This only gets run once, so get it right the first time
+        //Also make sure that you set the positions array
     }
 
     void OnDrawGizmos(){
-        Gizmos.color = Color.white;
-        if(!isVisible)
-            Gizmos.color = Color.red;
+        Gizmos.color = new Color(1, 1, 1, .1f);
+        if(isVisible)
+            Gizmos.color = Color.green;
         Gizmos.DrawWireCube(this.transform.position, size);
+        
     }
+}
+
+public struct ChunkUpdateJob : IJobParallelForTransform{
+
+    public float size;
+    public Vector3[] positions;
+
+    public void Execute(int index, TransformAccess transform){
+        Vector3 localPos = transform.localPosition;
+        localPos = positions[index] * size;
+        transform.localPosition = localPos;
+    }
+
 }

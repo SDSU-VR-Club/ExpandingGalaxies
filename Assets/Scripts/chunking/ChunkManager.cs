@@ -5,13 +5,14 @@ using Unity.Jobs;
 
 public class ChunkManager : MonoBehaviour
 {
-    public enum GenerationMethod {Cuboidal, Spherical}
+    public enum GenerationMethod {Cuboidal, Spherical, DumbFrustrumCulling}
 
     public GenerationMethod generationMethod;
     public int renderDistance = 1;
     public int maxShellCount = 4;
 
     //TODO :: Have a use for frustrum culling lol
+    HashSet<Vector3Int> visibleChunks;
 
     private int _shellCount = 1; //NOTE :: Shells are very expensive, each layer costs n^3 computing power
     
@@ -32,6 +33,7 @@ public class ChunkManager : MonoBehaviour
 
             print("shell count value was changed");
             _shellCount = Mathf.Clamp(value, 1, maxShellCount);
+            
             StopCoroutine(generator);
             StartCoroutine(generator = Generator(generationMethod));
         }
@@ -66,9 +68,11 @@ public class ChunkManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        
         CalculateShells();
+        if(generationMethod == GenerationMethod.DumbFrustrumCulling)
+            DumbFrustrumCulling();
         UpdateChunks();
-        FrustrumCulling();
 
         //TODO :: Remove for ease of tesing only
         Vector3Int diff = lastChunkID - currentChunkID;
@@ -78,7 +82,9 @@ public class ChunkManager : MonoBehaviour
         }
     }
 
-    void ShiftChunk(Vector3Int direction){
+    public void ShiftChunk(Vector3Int direction){
+        currentChunkID += direction;
+        lastChunkID = currentChunkID;
         foreach(Chunk chunk in chunks.Values){
             chunk.ShiftChunk(direction);
         }   
@@ -86,26 +92,43 @@ public class ChunkManager : MonoBehaviour
 
     //Make this a Job
     void UpdateChunks(){
-        foreach(Chunk chunk in chunks.Values){
-            if(!chunk.isVisible){
-                continue;
+        if(generationMethod == GenerationMethod.DumbFrustrumCulling){
+        
+            foreach(Vector3Int cpos in visibleChunks){
+                Vector3 pos = (Vector3)(currentChunkID - chunks[cpos].chunkID);
+                chunks[cpos].transform.position = this.transform.position + pos * time;
+                chunks[cpos].UpdateChunk(time);
             }
-            Vector3 pos = (Vector3)(currentChunkID - chunk.chunkID);
-            chunk.transform.position = this.transform.position + pos * time;
-            chunk.UpdateChunk(time);
+        } else {
+            foreach(Chunk chunk in chunks.Values){
+                if(!chunk.isVisible){
+                    continue;
+                }
+                Vector3 pos = (Vector3)(currentChunkID - chunk.chunkID);
+                chunk.transform.position = this.transform.position + pos * time;
+                chunk.UpdateChunk(time);
+            }
         }
     }
 
     //Lets the chunks know if they are visible, so we don't have to do work on them
-    //Turns out this is killing my FPS
-    void FrustrumCulling(){
+    void DumbFrustrumCulling(){
         //TODO :: Calculate which should be visible instead of if they are visible
         //TODO :: this lets us only have the GameObjects exist that we can see
         //TODO :: instead of having them exist just not enabled
 
+        visibleChunks = FrustrumChunkFinder();
+
         foreach(Chunk chunk in chunks.Values){
-            Vector3 pos = (Vector3)(currentChunkID - chunk.chunkID);
-            chunk.isVisible = IsVisibleFrom(new Bounds(this.transform.position + pos * time, new Vector3(time, time, time)), cam);
+            chunk.isVisible = false;
+        }
+
+        foreach(Vector3Int pos in visibleChunks){
+            if(!chunks.ContainsKey(pos)){
+                chunks.Add(pos, GenerateChunk(-pos));
+            }
+            chunks[pos].isVisible = true;
+            //chunks[pos].isVisible = IsVisibleFrom(new Bounds(this.transform.position + (Vector3)(pos) * time, new Vector3(time, time, time)), cam);
         }
     }
 
@@ -125,6 +148,20 @@ public class ChunkManager : MonoBehaviour
             yield return StartCoroutine(SphericalChunkGenerator());
             break;
         }
+    }
+
+    Chunk GenerateChunk(Vector3Int relativePosition){
+        //This is the setup for a new chunk
+        GameObject go = new GameObject();
+        Chunk chunk = go.AddComponent<Chunk>();
+        //chunks.Add(relativePosition, chunk);
+        go.transform.position = relativePosition;
+        go.transform.name = "" + relativePosition + currentChunkID; 
+        chunk.chunkID = relativePosition + currentChunkID;
+        go.transform.parent = chunksParent.transform;
+        chunk.UpdateChunk(time);
+        //chunk.GenerateChunk();
+        return chunk;
     }
 
     //Generates chunks arount (0,0,0) in the shape of a cube
@@ -147,17 +184,10 @@ public class ChunkManager : MonoBehaviour
                         chunks[relativePosition].gameObject.SetActive(true);
                         continue;
                     }
-
-                    //This is the setup for a new chunk
-                    GameObject go = new GameObject();
-                    Chunk chunk = go.AddComponent<Chunk>();
+                    Chunk chunk = GenerateChunk(relativePosition);
                     chunks.Add(relativePosition, chunk);
-                    go.transform.position = relativePosition;
-                    go.transform.name = "" + relativePosition + currentChunkID; 
-                    chunk.chunkID = relativePosition + currentChunkID;
-                    go.transform.parent = chunksParent.transform;
-                    chunk.UpdateChunk(time);
-                    //chunk.GenerateChunk();
+                    chunk.isVisible = true;
+                    
                 } 
             }
         }
@@ -188,15 +218,9 @@ public class ChunkManager : MonoBehaviour
                         continue;
 
                     //This is the setup for a new chunk
-                    GameObject go = new GameObject();
-                    Chunk chunk = go.AddComponent<Chunk>();
+                    Chunk chunk = GenerateChunk(relativePosition);
                     chunks.Add(relativePosition, chunk);
-                    go.transform.position = relativePosition;
-                    go.transform.name = "" + relativePosition + currentChunkID; 
-                    chunk.chunkID = relativePosition + currentChunkID;
-                    go.transform.parent = chunksParent.transform;
-                    chunk.UpdateChunk(time);
-                    //chunk.GenerateChunk();
+                    chunk.isVisible = true;
                 } 
             }
         }
@@ -205,10 +229,45 @@ public class ChunkManager : MonoBehaviour
 
     //TODO :: Only generate the chunks that we actually can see
     //TODO :: Also only have the minimum number of chunks needed from our FOV
-    IEnumerator FrustrumChunkGenerator(){
-        yield return null;
+    
+    HashSet<Vector3Int> FrustrumChunkFinder(){
+        Vector3 forward = cam.transform.forward;
+        Vector3 right = cam.transform.right;
+        Vector3 up = cam.transform.up;
+        //Iterate from (0,0,0) in the direction of forward
+        //at step 1 check the next 9 if they are in the fov range
+        HashSet<Vector3Int> visible = new HashSet<Vector3Int>();
+        for(float i = 0; i <= shellCount; i+=.5f){
+            Vector3Int center = new Vector3Int(Mathf.RoundToInt(forward.x * i), Mathf.RoundToInt(forward.y * i), Mathf.RoundToInt(forward.z * i));
+            //This is the center
+
+            for(float x = -i*2; x <= i*2; x+=.5f){
+                for(float y = -i*2; y <= i*2; y+=.5f){
+                    visible.Add(Vector3Int.RoundToInt(center + right * x + up * y));
+                }
+            }
+        }
+
+        return visible;
     }
 
+    Vector3Int CeilFloorVector3(Vector3 v){
+        return new Vector3Int(CeilFloorToInt(v.x), CeilFloorToInt(v.y), CeilFloorToInt(v.z));
+    }
+
+    int CeilFloorToInt(float v){
+        if(v <= 0) { //If Negative floor
+            return Mathf.FloorToInt(v);
+        }
+        return Mathf.CeilToInt(v);
+    }
+
+    //https://gist.github.com/coastwise/5951291
+    public float horizontalFOV(){
+        float vFOVInRads = cam.fieldOfView * Mathf.Deg2Rad;
+        float hFOVInRads = 2 * Mathf.Atan( Mathf.Tan(vFOVInRads / 2) * Camera.main.aspect);
+        return hFOVInRads * Mathf.Rad2Deg;
+    }
 
     //Source https://wiki.unity3d.com/index.php/IsVisibleFrom
     //Really handy, seriously check it out
@@ -218,11 +277,4 @@ public class ChunkManager : MonoBehaviour
 		return GeometryUtility.TestPlanesAABB(planes, bounds);
 	}
 
-}
-
-public struct FrustrumCheckJob : IJobParallelFor{
-
-    public void Execute(int index){
-
-    }
 }

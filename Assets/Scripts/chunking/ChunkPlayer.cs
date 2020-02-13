@@ -38,12 +38,22 @@ public class ChunkPlayer : MonoBehaviour
     //      0 % time is => 0
     //  and 
     //      time % time => 0
+    
+    private Vector3 last;
     void LoopPosition(){
         Vector3 pos = this.transform.localPosition;
         pos = new Vector3(pos.x + manager.time/2, pos.y + manager.time/2, pos.z + manager.time/2); //Change the bounds
         pos = new Vector3(mod(pos.x, manager.time), mod(pos.y, manager.time), mod(pos.z, manager.time)); //Using % operator
         pos = new Vector3(pos.x - manager.time/2, pos.y - manager.time/2, pos.z - manager.time/2); //Change back the bounds
+        
+        //Check if our diff is around the size of "time" with the sign being directionality
+        Vector3Int diff = Vector3Int.RoundToInt((pos - last) / manager.time);
+        if(diff != Vector3Int.zero){
+            manager.ShiftChunk(diff);
+        }
+
         this.transform.localPosition = pos;
+        last = pos;
     }
     
     //Source https://stackoverflow.com/questions/1082917/mod-of-negative-number-is-melting-my-brain
