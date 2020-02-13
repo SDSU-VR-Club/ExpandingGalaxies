@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using Unity.Jobs;
 using UnityEngine.Jobs;
+using Unity.Collections;
+using Unity.Burst;
 
 //TODO :: Use Jobs to increase performance
 //TODO :: Just Use pooling you dummy
@@ -12,11 +14,11 @@ public class Chunk : MonoBehaviour
     public Vector3 size = Vector3.zero;
     public Vector3Int chunkID;
 
-    TransformAccessArray clusters;
-    Vector3[] positions;
+    TransformAccessArray clustersAccess;
+    List<Transform> clusters;
+    NativeArray<Vector3> positions;
     JobHandle clusterHandle;
 
-    bool chunksGenerated = false;
     bool _isVisible = false;
 
     public bool isVisible{
@@ -27,49 +29,65 @@ public class Chunk : MonoBehaviour
                 //this.gameObject.SetActive(false);
                 return;
             }
-            
-            if(_isVisible && !chunksGenerated){
-                GenerateChunk(); //Only run if the chunks have not been generated and we are visible now
-            }
         }
     }
 
     private float time;
+
+    void Awake(){
+        clusters = new List<Transform>();
+        clustersAccess = new TransformAccessArray(0, -1);
+        ClusterSetup();
+    }
 
     //Changes the chunk to a new index
     //TODO :: USE POOLING!!!
     public void ShiftChunk(Vector3Int direction){
         chunkID += direction;
         this.transform.name = "" + chunkID;
-        chunksGenerated = false;
-
+        GenerateChunk();
         //Should only need an Update
         UpdateChunk(time);
     }
 
-    //Run for the scaling update
+    //DO NOT CHANGE THIS FUNCTION!!
     public virtual void UpdateChunk(float time){
         this.time = time;
         size = new Vector3(time, time, time);
-        
+
+        //Jobs code
         clusterHandle.Complete();
         ChunkUpdateJob job = new ChunkUpdateJob(){
             size = time,
             positions = this.positions
         };
+        clusterHandle = job.Schedule(clustersAccess);
+        JobHandle.ScheduleBatchedJobs();
     }
 
-    public virtual void ClearChunk(){
-        //TODO :: Use Pooling
-        //Make sure we have stuff to clean up before we do.
-    }
-
+    //This gets called when you shift chunks
     public virtual void GenerateChunk(){
-        //Do setup for the clusters
-        chunksGenerated = true;
+        Random.InitState(chunkID.GetHashCode());
+        positions = new NativeArray<Vector3>(clusters.Count, Allocator.Persistent);
+        for(int i = 0; i < positions.Length; i++){
+            positions[i] = new Vector3(Random.RandomRange(-.5f, .5f), Random.RandomRange(-.5f, .5f), Random.RandomRange(-.5f, .5f));
+        }
+    }
 
-        //This only gets run once, so get it right the first time
-        //Also make sure that you set the positions array
+    public virtual void ClusterSetup(){
+        int numClusters = NumClusters(chunkID);
+        for(int i = 0; i < numClusters; i++){
+            clusters.Add(GameObject.CreatePrimitive(PrimitiveType.Sphere).transform);
+            clusters[i].parent = this.transform;
+        }
+        clustersAccess.capacity = clusters.Count;
+        clustersAccess.SetTransforms(clusters.ToArray());
+        GenerateChunk();
+    }
+
+    public static int NumClusters(Vector3Int ChunkID){
+        //TODO implement
+        return 15;
     }
 
     void OnDrawGizmos(){
@@ -81,10 +99,11 @@ public class Chunk : MonoBehaviour
     }
 }
 
+[BurstCompile]
 public struct ChunkUpdateJob : IJobParallelForTransform{
 
     public float size;
-    public Vector3[] positions;
+    public NativeArray<Vector3> positions;
 
     public void Execute(int index, TransformAccess transform){
         Vector3 localPos = transform.localPosition;

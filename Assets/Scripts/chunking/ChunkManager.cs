@@ -130,7 +130,7 @@ public class ChunkManager : MonoBehaviour
         chunk.chunkID = relativePosition + currentChunkID;
         go.transform.parent = chunksParent.transform;
         chunk.UpdateChunk(time);
-        //chunk.GenerateChunk();
+        chunk.GenerateChunk();
         return chunk;
     }
 
@@ -195,30 +195,6 @@ public class ChunkManager : MonoBehaviour
             }
         }
         yield return null;
-    }
-
-    //TODO :: Only generate the chunks that we actually can see
-    //TODO :: Also only have the minimum number of chunks needed from our FOV
-    
-    HashSet<Vector3Int> FrustrumChunkFinder(){
-        Vector3 forward = cam.transform.forward;
-        Vector3 right = cam.transform.right;
-        Vector3 up = cam.transform.up;
-        //Iterate from (0,0,0) in the direction of forward
-        //at step 1 check the next 9 if they are in the fov range
-        HashSet<Vector3Int> visible = new HashSet<Vector3Int>();
-        for(float i = 0; i <= shellCount; i+=.5f){
-            Vector3Int center = new Vector3Int(Mathf.RoundToInt(forward.x * i), Mathf.RoundToInt(forward.y * i), Mathf.RoundToInt(forward.z * i));
-            //This is the center
-
-            for(float x = -i*2; x <= i*2; x+=.5f){
-                for(float y = -i*2; y <= i*2; y+=.5f){
-                    visible.Add(Vector3Int.RoundToInt(center + right * x + up * y));
-                }
-            }
-        }
-
-        return visible;
     }
 
 }
