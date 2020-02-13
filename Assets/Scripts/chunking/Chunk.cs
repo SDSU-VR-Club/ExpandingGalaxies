@@ -16,7 +16,6 @@ public class Chunk : MonoBehaviour
 
     TransformAccessArray clustersAccess;
     List<Transform> clusters;
-    NativeArray<Vector3> positions;
     JobHandle clusterHandle;
 
     bool _isVisible = false;
@@ -36,7 +35,7 @@ public class Chunk : MonoBehaviour
 
     void Awake(){
         clusters = new List<Transform>();
-        clustersAccess = new TransformAccessArray(0, -1);
+        //clustersAccess = new TransformAccessArray(0, -1);
         ClusterSetup();
     }
 
@@ -54,23 +53,25 @@ public class Chunk : MonoBehaviour
     public virtual void UpdateChunk(float time){
         this.time = time;
         size = new Vector3(time, time, time);
-
+        GenerateChunk();
         //Jobs code
-        clusterHandle.Complete();
+        /*clusterHandle.Complete();
         ChunkUpdateJob job = new ChunkUpdateJob(){
             size = time,
             positions = this.positions
         };
         clusterHandle = job.Schedule(clustersAccess);
-        JobHandle.ScheduleBatchedJobs();
+        JobHandle.ScheduleBatchedJobs();*/
+
+
     }
 
     //This gets called when you shift chunks
     public virtual void GenerateChunk(){
         Random.InitState(chunkID.GetHashCode());
-        positions = new NativeArray<Vector3>(clusters.Count, Allocator.Persistent);
-        for(int i = 0; i < positions.Length; i++){
-            positions[i] = new Vector3(Random.RandomRange(-.5f, .5f), Random.RandomRange(-.5f, .5f), Random.RandomRange(-.5f, .5f));
+        //positions = new NativeArray<Vector3>(clusters.Count, Allocator.Persistent);
+        for(int i = 0; i < clusters.Count; i++){
+            clusters[i].position = this.transform.position + new Vector3(time * Random.Range(-.5f, .5f), time * Random.Range(-.5f, .5f), time * Random.Range(-.5f, .5f));
         }
     }
 
@@ -80,8 +81,8 @@ public class Chunk : MonoBehaviour
             clusters.Add(GameObject.CreatePrimitive(PrimitiveType.Sphere).transform);
             clusters[i].parent = this.transform;
         }
-        clustersAccess.capacity = clusters.Count;
-        clustersAccess.SetTransforms(clusters.ToArray());
+        //clustersAccess.capacity = clusters.Count;
+        //clustersAccess.SetTransforms(clusters.ToArray());
         GenerateChunk();
     }
 
@@ -103,11 +104,10 @@ public class Chunk : MonoBehaviour
 public struct ChunkUpdateJob : IJobParallelForTransform{
 
     public float size;
-    public NativeArray<Vector3> positions;
 
     public void Execute(int index, TransformAccess transform){
-        Vector3 localPos = transform.localPosition;
-        localPos = positions[index] * size;
+        Vector3 localPos = transform.position;
+        //localPos = positions[index] * size;
         transform.localPosition = localPos;
     }
 

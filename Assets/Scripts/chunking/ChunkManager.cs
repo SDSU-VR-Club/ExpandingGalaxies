@@ -14,7 +14,7 @@ public class ChunkManager : MonoBehaviour
     //TODO :: Have a use for frustrum culling lol
     HashSet<Vector3Int> visibleChunks;
 
-    private int _shellCount = 1; //NOTE :: Shells are very expensive, each layer costs n^3 computing power
+    public int _shellCount = 1; //NOTE :: Shells are very expensive, each layer costs n^3 computing power
     
     private int shellCount{
         get{
