@@ -5,7 +5,7 @@ using Unity.Jobs;
 
 public class ChunkManager : MonoBehaviour
 {
-    public enum GenerationMethod {Cuboidal, Spherical, DumbFrustrumCulling}
+    public enum GenerationMethod {Cuboidal, Spherical}
 
     public GenerationMethod generationMethod;
     public int renderDistance = 1;
@@ -70,8 +70,6 @@ public class ChunkManager : MonoBehaviour
     {
         
         CalculateShells();
-        if(generationMethod == GenerationMethod.DumbFrustrumCulling)
-            DumbFrustrumCulling();
         UpdateChunks();
 
         //TODO :: Remove for ease of tesing only
@@ -92,43 +90,15 @@ public class ChunkManager : MonoBehaviour
 
     //Make this a Job
     void UpdateChunks(){
-        if(generationMethod == GenerationMethod.DumbFrustrumCulling){
-        
-            foreach(Vector3Int cpos in visibleChunks){
-                Vector3 pos = (Vector3)(currentChunkID - chunks[cpos].chunkID);
-                chunks[cpos].transform.position = this.transform.position + pos * time;
-                chunks[cpos].UpdateChunk(time);
-            }
-        } else {
-            foreach(Chunk chunk in chunks.Values){
-                if(!chunk.isVisible){
-                    continue;
-                }
-                Vector3 pos = (Vector3)(currentChunkID - chunk.chunkID);
-                chunk.transform.position = this.transform.position + pos * time;
-                chunk.UpdateChunk(time);
-            }
-        }
-    }
-
-    //Lets the chunks know if they are visible, so we don't have to do work on them
-    void DumbFrustrumCulling(){
-        //TODO :: Calculate which should be visible instead of if they are visible
-        //TODO :: this lets us only have the GameObjects exist that we can see
-        //TODO :: instead of having them exist just not enabled
-
-        visibleChunks = FrustrumChunkFinder();
-
         foreach(Chunk chunk in chunks.Values){
-            chunk.isVisible = false;
-        }
-
-        foreach(Vector3Int pos in visibleChunks){
-            if(!chunks.ContainsKey(pos)){
-                chunks.Add(pos, GenerateChunk(-pos));
+            if(!chunk.isVisible){
+                continue;
             }
-            chunks[pos].isVisible = true;
-            //chunks[pos].isVisible = IsVisibleFrom(new Bounds(this.transform.position + (Vector3)(pos) * time, new Vector3(time, time, time)), cam);
+            
+            Vector3 pos = (Vector3)(currentChunkID - chunk.chunkID);
+            chunk.transform.position = this.transform.position + pos * time;
+            chunk.UpdateChunk(time);
+            
         }
     }
 
@@ -250,31 +220,5 @@ public class ChunkManager : MonoBehaviour
 
         return visible;
     }
-
-    Vector3Int CeilFloorVector3(Vector3 v){
-        return new Vector3Int(CeilFloorToInt(v.x), CeilFloorToInt(v.y), CeilFloorToInt(v.z));
-    }
-
-    int CeilFloorToInt(float v){
-        if(v <= 0) { //If Negative floor
-            return Mathf.FloorToInt(v);
-        }
-        return Mathf.CeilToInt(v);
-    }
-
-    //https://gist.github.com/coastwise/5951291
-    public float horizontalFOV(){
-        float vFOVInRads = cam.fieldOfView * Mathf.Deg2Rad;
-        float hFOVInRads = 2 * Mathf.Atan( Mathf.Tan(vFOVInRads / 2) * Camera.main.aspect);
-        return hFOVInRads * Mathf.Rad2Deg;
-    }
-
-    //Source https://wiki.unity3d.com/index.php/IsVisibleFrom
-    //Really handy, seriously check it out
-    public static bool IsVisibleFrom(Bounds bounds, Camera camera)
-	{
-		Plane[] planes = GeometryUtility.CalculateFrustumPlanes(camera);
-		return GeometryUtility.TestPlanesAABB(planes, bounds);
-	}
 
 }
