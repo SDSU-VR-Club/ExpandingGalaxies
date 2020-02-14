@@ -10,7 +10,7 @@ public class ChunkManager : MonoBehaviour
     public GenerationMethod generationMethod;
     public int renderDistance = 1;
     public int maxShellCount = 4;
-
+    public GameObject clusterPrefab;
     //TODO :: Have a use for frustrum culling lol
     HashSet<Vector3Int> visibleChunks;
 
@@ -124,6 +124,8 @@ public class ChunkManager : MonoBehaviour
         //This is the setup for a new chunk
         GameObject go = new GameObject();
         Chunk chunk = go.AddComponent<Chunk>();
+        chunk.clusterPrefab = clusterPrefab;
+        chunk.ClusterSetup();
         //chunks.Add(relativePosition, chunk);
         go.transform.position = relativePosition;
         go.transform.name = "" + relativePosition + currentChunkID; 

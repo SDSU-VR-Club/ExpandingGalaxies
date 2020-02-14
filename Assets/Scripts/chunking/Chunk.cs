@@ -13,7 +13,7 @@ public class Chunk : MonoBehaviour
     //Size is a function of Time
     public Vector3 size = Vector3.zero;
     public Vector3Int chunkID;
-
+    public GameObject clusterPrefab;
     TransformAccessArray clustersAccess;
     List<Transform> clusters;
     JobHandle clusterHandle;
@@ -30,13 +30,11 @@ public class Chunk : MonoBehaviour
             }
         }
     }
-
     private float time;
 
     void Awake(){
         clusters = new List<Transform>();
-        //clustersAccess = new TransformAccessArray(0, -1);
-        ClusterSetup();
+        //clustersAccess = new TransformAccessArray(0, -1);       
     }
 
     //Changes the chunk to a new index
@@ -78,7 +76,7 @@ public class Chunk : MonoBehaviour
     public virtual void ClusterSetup(){
         int numClusters = NumClusters(chunkID);
         for(int i = 0; i < numClusters; i++){
-            clusters.Add(GameObject.CreatePrimitive(PrimitiveType.Sphere).transform);
+            clusters.Add(Instantiate(clusterPrefab).transform);
             clusters[i].parent = this.transform;
         }
         //clustersAccess.capacity = clusters.Count;
