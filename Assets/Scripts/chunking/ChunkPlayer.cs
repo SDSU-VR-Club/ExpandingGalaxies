@@ -7,14 +7,14 @@ public class ChunkPlayer : MonoBehaviour
 
     public ChunkManager manager;
     // Start is called before the first frame update
-    void Start()
+    void Awake()
     {
         manager = GameObject.FindObjectOfType<ChunkManager>();
         this.transform.parent = manager.transform;
     }
 
     // Update is called once per frame
-    void Update()
+    void LateUpdate()
     {
         LoopPosition();
     }
