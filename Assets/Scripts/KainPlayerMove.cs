@@ -14,7 +14,7 @@ public class KainPlayerMove : MonoBehaviour
         
     }
 
-
+    //
     void Update()
     {
         if (Input.GetKey(KeyCode.Space))

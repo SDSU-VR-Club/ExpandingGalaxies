@@ -68,7 +68,7 @@ public class ChunkManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+        time += Time.smoothDeltaTime;
         CalculateShells();
         UpdateChunks();
 

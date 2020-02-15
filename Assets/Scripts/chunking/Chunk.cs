@@ -1,10 +1,10 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using Unity.Jobs;
-using UnityEngine.Jobs;
-using Unity.Collections;
-using Unity.Burst;
+//using Unity.Jobs;
+//using UnityEngine.Jobs;
+
+//using Unity.Burst;
 
 //TODO :: Use Jobs to increase performance
 //TODO :: Just Use pooling you dummy
@@ -14,9 +14,9 @@ public class Chunk : MonoBehaviour
     public Vector3 size = Vector3.zero;
     public Vector3Int chunkID;
     public GameObject clusterPrefab;
-    TransformAccessArray clustersAccess;
+    //TransformAccessArray clustersAccess;
     List<Transform> clusters;
-    JobHandle clusterHandle;
+    //JobHandle clusterHandle;
 
     bool _isVisible = false;
 
@@ -98,7 +98,7 @@ public class Chunk : MonoBehaviour
     }
 }
 
-[BurstCompile]
+/*[BurstCompile]
 public struct ChunkUpdateJob : IJobParallelForTransform{
 
     public float size;
@@ -109,4 +109,4 @@ public struct ChunkUpdateJob : IJobParallelForTransform{
         transform.localPosition = localPos;
     }
 
-}
+}*/
