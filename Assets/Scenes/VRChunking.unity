@@ -1733,6 +1733,8 @@ MonoBehaviour:
   clusterMask:
     serializedVersion: 2
     m_Bits: 256
+  playerTransform: {fileID: 772577189}
+  Speed: 0.03
 --- !u!4 &1600278182
 Transform:
   m_ObjectHideFlags: 0
