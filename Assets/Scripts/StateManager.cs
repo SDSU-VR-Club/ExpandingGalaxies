@@ -61,6 +61,7 @@ public class StateManager : MonoBehaviour
     } 
     IEnumerator moveTowards(Vector3 destination )
     {
+        transform.parent = null;
         float distance = Vector3.Distance(destination, playerTransform.position);
         Vector3 direction = -(playerTransform.position - destination).normalized;
         while (distance > 0)
@@ -69,6 +70,20 @@ public class StateManager : MonoBehaviour
             print("working");
             playerTransform.position += direction * Speed;
             distance -= Speed;
+        }
+        
+        RaycastHit[] hits; 
+        hits = Physics.SphereCastAll (playerTransform.position, 2, Vector3.one, 0, clusterMask);
+
+        if (hits.Length >= 1) {
+            Transform target; 
+            target = hits[0].collider.transform;
+            print(target.position);
+            foreach (RaycastHit hit in hits){
+                if ((hit.point - playerTransform.position).sqrMagnitude < (target.position - playerTransform.position).sqrMagnitude)
+                target = hit.collider.transform;
+            }
+            playerTransform.parent = target;
         }
         
     }

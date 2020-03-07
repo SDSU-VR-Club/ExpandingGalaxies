@@ -6,6 +6,7 @@ public class ChunkPlayer : MonoBehaviour
 {
 
     public ChunkManager manager;
+    public Vector3 position = Vector3.zero;
     // Start is called before the first frame update
     void Awake()
     {
@@ -39,9 +40,9 @@ public class ChunkPlayer : MonoBehaviour
     //  and 
     //      time % time => 0
     
-    private Vector3 last;
+    private Vector3 last;    
     void LoopPosition(){
-        Vector3 pos = this.transform.localPosition;
+        Vector3 pos = this.transform.position;
         pos = new Vector3(pos.x + manager.time/2, pos.y + manager.time/2, pos.z + manager.time/2); //Change the bounds
         pos = new Vector3(mod(pos.x, manager.time), mod(pos.y, manager.time), mod(pos.z, manager.time)); //Using % operator
         pos = new Vector3(pos.x - manager.time/2, pos.y - manager.time/2, pos.z - manager.time/2); //Change back the bounds
@@ -52,7 +53,7 @@ public class ChunkPlayer : MonoBehaviour
             manager.ShiftChunk(diff);
         }
 
-        this.transform.localPosition = pos;
+        this.transform.position = pos;
         last = pos;
     }
     
