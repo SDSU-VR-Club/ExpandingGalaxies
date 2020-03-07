@@ -13,24 +13,61 @@ public class StateManager : MonoBehaviour
     public LayerMask clusterMask;
     public Transform playerTransform;
     public float Speed;
+    public float minimumTime;
+    public float maximumTime;
+    public float startTime;
+    private float timeGrowth;
+    public float timeGrowthIncrement;
     // Start is called before the first frame update
     void Start()
     {
+        chunk.time = startTime;
         Distance.enabled = false;
+        timeGrowth = timeGrowthIncrement;
     }
 
     // Update is called once per frame
     void Update()
     {
+        if (chunk.time >= maximumTime&&timeGrowth>0)
+        {
+            timeGrowth = 0;
+        }
+        if (chunk.time <=minimumTime && timeGrowth < 0)
+        {
+            timeGrowth = 0;
+        }
+        if (Input.GetKeyDown(KeyCode.DownArrow))
+        {
+            isPaused = true;
+            timeGrowth = 0;
+        }
+        if (Input.GetKeyDown(KeyCode.RightArrow))
+        {
+            timeGrowth += timeGrowthIncrement;
+            if (timeGrowth == 0)
+                isPaused = true;
+            else
+            {
+                isPaused = false;
+            }
+        }
+        if (Input.GetKeyDown(KeyCode.LeftArrow))
+        {
+            timeGrowth -= timeGrowthIncrement;
+            if (timeGrowth == 0)
+                isPaused = true;
+            else
+            {
+                isPaused = false;
+            }
+        }
         if (!isPaused)
         {
-            chunk.time += Time.smoothDeltaTime;
+            chunk.time += timeGrowth*Time.smoothDeltaTime;
+        }
+        //leftHand.gameObject.active && leftHand.GetComponent<Hand>().grabPinchAction.stateDown
 
-        }
-        if (Input.GetKeyDown(KeyCode.Space)||leftHand.gameObject.active && leftHand.GetComponent<Hand>().grabPinchAction.stateDown)
-        {
-            isPaused = !isPaused;
-        }
 
         if (isPaused && Input.GetKeyDown(KeyCode.D))
         {
