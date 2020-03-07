@@ -10,6 +10,7 @@ public class StateManager : MonoBehaviour
     public ChunkManager chunk;
     public Transform leftHand;
     public Text Distance;
+    public Text timeText;
     public LayerMask clusterMask;
     public Transform playerTransform;
     public float Speed;
@@ -29,14 +30,6 @@ public class StateManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (chunk.time >= maximumTime&&timeGrowth>0)
-        {
-            timeGrowth = 0;
-        }
-        if (chunk.time <=minimumTime && timeGrowth < 0)
-        {
-            timeGrowth = 0;
-        }
         if (Input.GetKeyDown(KeyCode.DownArrow))
         {
             isPaused = true;
@@ -55,16 +48,46 @@ public class StateManager : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.LeftArrow))
         {
             timeGrowth -= timeGrowthIncrement;
-            if (timeGrowth == 0)
+            if (timeGrowth == 0) 
                 isPaused = true;
             else
             {
+                
+                
                 isPaused = false;
             }
         }
+        if (chunk.time >= maximumTime&&timeGrowth>0)
+        {
+            timeGrowth = 0;
+            chunk.time = maximumTime;
+        }
+        if (chunk.time <=minimumTime && timeGrowth < 0)
+        {
+            timeGrowth = 0;
+            chunk.time = minimumTime;
+        }
+
         if (!isPaused)
         {
             chunk.time += timeGrowth*Time.smoothDeltaTime;
+            float timePercentage = chunk.time / (maximumTime - minimumTime);
+            timePercentage *= 100;
+            timePercentage += -11f;
+            timeText.text = timePercentage.ToString("F1") + " billion years";
+            if (timeGrowth < 0)
+            {
+                RenderSettings.fogColor = Color.blue;
+            }
+            if (timeGrowth > 0)
+            {
+                RenderSettings.fogColor = Color.red;
+            }
+            
+        }
+        else
+        {
+            RenderSettings.fogColor = Color.clear;
         }
         //leftHand.gameObject.active && leftHand.GetComponent<Hand>().grabPinchAction.stateDown
 
