@@ -10,8 +10,9 @@ public class StateManager : MonoBehaviour
     bool isPaused = false;
     public ChunkManager chunk;
     public Transform leftHand;
-    public Text Distance;
+    public Text DistanceText;
     public Text timeText;
+    public Text VelocityText;
     public LayerMask clusterMask;
     public Transform playerTransform;
     public float Speed;
@@ -24,16 +25,40 @@ public class StateManager : MonoBehaviour
     void Start()
     {
         chunk.time = startTime;
-        Distance.enabled = false;
+        DistanceText.enabled = false;
         timeGrowth = timeGrowthIncrement;
         
 
     }
-    
+    public void forward()
+    {
+        timeGrowth += timeGrowthIncrement;
+        if (timeGrowth == 0)
+            isPaused = true;
+        else
+        {
+            isPaused = false;
+        }
+    }
+    public void backward()
+    {
+        timeGrowth -= timeGrowthIncrement;
+        if (timeGrowth == 0)
+            isPaused = true;
+        else
+        {
+
+
+            isPaused = false;
+        }
+    }
     // Update is called once per frame
     void Update()
     {
-        
+        if (Input.GetKeyDown(KeyCode.R))
+        {
+            chunk.time = startTime;
+        }
         if (Input.GetKeyDown(KeyCode.DownArrow))
         {
             isPaused = true;
@@ -41,25 +66,11 @@ public class StateManager : MonoBehaviour
         }
         if (Input.GetKeyDown(KeyCode.RightArrow))
         {
-            timeGrowth += timeGrowthIncrement;
-            if (timeGrowth == 0)
-                isPaused = true;
-            else
-            {
-                isPaused = false;
-            }
+            forward();
         }
         if (Input.GetKeyDown(KeyCode.LeftArrow))
         {
-            timeGrowth -= timeGrowthIncrement;
-            if (timeGrowth == 0) 
-                isPaused = true;
-            else
-            {
-                
-                
-                isPaused = false;
-            }
+            backward();
         }
         if (chunk.time >= maximumTime&&timeGrowth>0)
         {
@@ -78,7 +89,7 @@ public class StateManager : MonoBehaviour
             float timePercentage = chunk.time / (maximumTime - minimumTime);
             timePercentage *= 100;
             timePercentage += -11f;
-            timeText.text = timePercentage.ToString("F1") + " billion years";
+            timeText.text = "Time: "+timePercentage.ToString("F1") + "b years";
             if (timeGrowth < 0)
             {
                 RenderSettings.fogColor = Color.blue;
@@ -101,28 +112,43 @@ public class StateManager : MonoBehaviour
             RaycastHit HitBoi;
             if (Physics.Raycast(leftHand.position, leftHand.forward, out HitBoi, Mathf.Infinity, clusterMask))
             {
-                Distance.text = HitBoi.distance.ToString();
+                DistanceText.text = HitBoi.distance.ToString();
             }
         }
 
         if(isPaused)
         {
-            Distance.enabled = true;
+            
             RaycastHit Hitboi;
-            if (Input.GetKeyDown(KeyCode.R) && Physics.Raycast(leftHand.position, leftHand.forward, out Hitboi, Mathf.Infinity, clusterMask))
+            if (Physics.Raycast(leftHand.position, leftHand.forward, out Hitboi, Mathf.Infinity, clusterMask))
             {
                 //playerTransform.position = Hitboi.point;
-                print("working");
-                StopAllCoroutines();
-                StartCoroutine(moveTowards(Hitboi.point));
+                if(Input.GetKeyDown(KeyCode.R)){
+                    print("working");
+                    StopAllCoroutines();
+                    StartCoroutine(moveTowards(Hitboi.point));
+                }
+                else if (Input.GetKeyDown(KeyCode.M))
+                {
+                    selectCluster(Hitboi.collider.transform);
+                }
             }
         }
         else
         {
-            Distance.enabled = false;
+            DistanceText.enabled = false;
+            VelocityText.enabled = false;
         }
         
     } 
+    private void selectCluster(Transform target)
+    {
+        var d = Vector3.Distance(target.position, playerTransform.position);
+        DistanceText.enabled = true;
+        DistanceText.text = "Distance: " + d.ToString("F1") + " ly";
+        VelocityText.enabled = true;
+        VelocityText.text = "Velocity: " + (d * (1 + Random.RandomRange(-0.05f, 0.05f))).ToString("F1") + " km/s";
+    }
     IEnumerator moveTowards(Vector3 destination )
     {
         transform.parent = null;
