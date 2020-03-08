@@ -10,9 +10,11 @@ public class StateManager : MonoBehaviour
     bool isPaused = false;
     public ChunkManager chunk;
     public Transform leftHand;
+    public Transform rightHand;
     public Text DistanceText;
     public Text timeText;
     public Text VelocityText;
+    public Text NameText;
     public LayerMask clusterMask;
     public Transform playerTransform;
     public float Speed;
@@ -21,17 +23,22 @@ public class StateManager : MonoBehaviour
     public float startTime;
     private float timeGrowth;
     public float timeGrowthIncrement;
+    public GameObject selected;
+    public GameObject selectedDisplay;
+    bool moving = false;
     // Start is called before the first frame update
     void Start()
     {
         chunk.time = startTime;
-        DistanceText.enabled = false;
+        selectedDisplay.SetActive(false);
         timeGrowth = timeGrowthIncrement;
         
 
     }
     public void forward()
     {
+        if (moving)
+            return;
         timeGrowth += timeGrowthIncrement;
         if (timeGrowth == 0)
             isPaused = true;
@@ -42,6 +49,8 @@ public class StateManager : MonoBehaviour
     }
     public void backward()
     {
+        if (moving)
+            return;
         timeGrowth -= timeGrowthIncrement;
         if (timeGrowth == 0)
             isPaused = true;
@@ -55,22 +64,25 @@ public class StateManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.R))
+        if (!moving)
         {
-            chunk.time = startTime;
-        }
-        if (Input.GetKeyDown(KeyCode.DownArrow))
-        {
-            isPaused = true;
-            timeGrowth = 0;
-        }
-        if (Input.GetKeyDown(KeyCode.RightArrow))
-        {
-            forward();
-        }
-        if (Input.GetKeyDown(KeyCode.LeftArrow))
-        {
-            backward();
+            if (Input.GetKeyDown(KeyCode.R))
+            {
+                chunk.time = startTime;
+            }
+            if (Input.GetKeyDown(KeyCode.DownArrow))
+            {
+                isPaused = true;
+                timeGrowth = 0;
+            }
+            if (Input.GetKeyDown(KeyCode.RightArrow))
+            {
+                forward();
+            }
+            if (Input.GetKeyDown(KeyCode.LeftArrow))
+            {
+                backward();
+            }
         }
         if (chunk.time >= maximumTime&&timeGrowth>0)
         {
@@ -104,53 +116,59 @@ public class StateManager : MonoBehaviour
         {
             RenderSettings.fogColor = Color.clear;
         }
-        //leftHand.gameObject.active && leftHand.GetComponent<Hand>().grabPinchAction.stateDown
-
-
-        if (isPaused && Input.GetKeyDown(KeyCode.D))
-        {
-            RaycastHit HitBoi;
-            if (Physics.Raycast(leftHand.position, leftHand.forward, out HitBoi, Mathf.Infinity, clusterMask))
-            {
-                DistanceText.text = HitBoi.distance.ToString();
-            }
-        }
-
-        if(isPaused)
+        //
+        if(isPaused&&!moving)
         {
             
             RaycastHit Hitboi;
-            if (Physics.Raycast(leftHand.position, leftHand.forward, out Hitboi, Mathf.Infinity, clusterMask))
+            
+            
+                    
+             
+            if (leftHand.gameObject.active && leftHand.GetComponent<Valve.VR.InteractionSystem.Hand>().grabPinchAction.stateDown)
             {
-                //playerTransform.position = Hitboi.point;
-                if(Input.GetKeyDown(KeyCode.R)){
-                    print("working");
-                    StopAllCoroutines();
-                    StartCoroutine(moveTowards(Hitboi.point));
-                }
-                else if (Input.GetKeyDown(KeyCode.M))
+                if (Physics.Raycast(leftHand.position, leftHand.forward, out Hitboi, Mathf.Infinity, clusterMask))
                 {
                     selectCluster(Hitboi.collider.transform);
                 }
             }
+            if (rightHand.gameObject.active && rightHand.GetComponent<Valve.VR.InteractionSystem.Hand>().grabPinchAction.stateDown)
+            {
+                if (Physics.Raycast(rightHand.position, leftHand.forward, out Hitboi, Mathf.Infinity, clusterMask))
+                {
+                    selectCluster(Hitboi.collider.transform);
+                }
+            }
+
         }
         else
         {
-            DistanceText.enabled = false;
-            VelocityText.enabled = false;
+            selectedDisplay.SetActive(false);
+            selected = null;
         }
         
-    } 
+    }
+    public void Travel()
+    {
+        if (selected&&!moving) {
+            StopAllCoroutines();
+            StartCoroutine(moveTowards(selected.transform.position));
+        }
+    }
     private void selectCluster(Transform target)
     {
+        selectedDisplay.SetActive(true);
         var d = Vector3.Distance(target.position, playerTransform.position);
-        DistanceText.enabled = true;
+        
         DistanceText.text = "Distance: " + d.ToString("F1") + " ly";
-        VelocityText.enabled = true;
+        
         VelocityText.text = "Velocity: " + (d * (1 + Random.RandomRange(-0.05f, 0.05f))).ToString("F1") + " km/s";
+        NameText.text = "Selected: " + target.gameObject.name;
+        selected = target.gameObject;
     }
     IEnumerator moveTowards(Vector3 destination )
     {
+        moving = true;
         transform.parent = null;
         float distance = Vector3.Distance(destination, playerTransform.position);
         Vector3 direction = -(playerTransform.position - destination).normalized;
@@ -175,6 +193,6 @@ public class StateManager : MonoBehaviour
             }
             playerTransform.parent = target;
         }
-        
+        moving = false;
     }
 }
