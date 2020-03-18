@@ -26,6 +26,7 @@ public class StateManager : MonoBehaviour
     public GameObject selected;
     public GameObject selectedDisplay;
     bool moving = false;
+    public GameObject[] laserPointers;
     // Start is called before the first frame update
     void Start()
     {
@@ -121,7 +122,10 @@ public class StateManager : MonoBehaviour
         {
             
             RaycastHit Hitboi;
-            
+            foreach(GameObject laser in laserPointers)
+            {
+                laser.SetActive(true);
+            }
             
                     
              
@@ -134,7 +138,7 @@ public class StateManager : MonoBehaviour
             }
             if (rightHand.gameObject.active && rightHand.GetComponent<Valve.VR.InteractionSystem.Hand>().grabPinchAction.stateDown)
             {
-                if (Physics.Raycast(rightHand.position, leftHand.forward, out Hitboi, Mathf.Infinity, clusterMask))
+                if (Physics.Raycast(rightHand.position, rightHand.forward, out Hitboi, Mathf.Infinity, clusterMask))
                 {
                     selectCluster(Hitboi.collider.transform);
                 }
@@ -145,6 +149,10 @@ public class StateManager : MonoBehaviour
         {
             selectedDisplay.SetActive(false);
             selected = null;
+            foreach (GameObject laser in laserPointers)
+            {
+                laser.SetActive(false);
+            }
         }
         
     }

@@ -17,7 +17,7 @@ public class Chunk : MonoBehaviour
     //TransformAccessArray clustersAccess;
     List<Transform> clusters;
     //JobHandle clusterHandle;
-
+    public static Transform milkyWay;
     bool _isVisible = false;
 
     public bool isVisible{
@@ -34,6 +34,7 @@ public class Chunk : MonoBehaviour
 
     void Awake(){
         clusters = new List<Transform>();
+        
         //clustersAccess = new TransformAccessArray(0, -1);       
     }
 
@@ -69,7 +70,10 @@ public class Chunk : MonoBehaviour
         Random.InitState(chunkID.GetHashCode());
         //positions = new NativeArray<Vector3>(clusters.Count, Allocator.Persistent);
         for(int i = 0; i < clusters.Count; i++){
+
             clusters[i].position = this.transform.position + new Vector3(time * Random.Range(-.5f, .5f), time * Random.Range(-.5f, .5f), time * Random.Range(-.5f, .5f));
+           
+            
         }
     }
 
@@ -78,7 +82,9 @@ public class Chunk : MonoBehaviour
         for(int i = 0; i < numClusters; i++){
             clusters.Add(Instantiate(clusterPrefab).transform);
             clusters[i].parent = this.transform;
+            
         }
+        
         //clustersAccess.capacity = clusters.Count;
         //clustersAccess.SetTransforms(clusters.ToArray());
         GenerateChunk();

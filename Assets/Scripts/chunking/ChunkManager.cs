@@ -11,6 +11,7 @@ public class ChunkManager : MonoBehaviour
     public int renderDistance = 1;
     public int maxShellCount = 4;
     public GameObject clusterPrefab;
+    static Transform milkyWay;
     //TODO :: Have a use for frustrum culling lol
     HashSet<Vector3Int> visibleChunks;
 
@@ -55,6 +56,12 @@ public class ChunkManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        if (!milkyWay)
+        {
+            milkyWay = Instantiate(clusterPrefab).transform;
+            milkyWay.GetComponent<MeshRenderer>().material.color = new Color(0, 1, 0);
+            milkyWay.gameObject.name = "milky way";
+        }
         chunksParent = new GameObject().transform;
         chunksParent.parent = this.transform;
         chunksParent.name = "Chunks";
@@ -90,6 +97,7 @@ public class ChunkManager : MonoBehaviour
 
     //Make this a Job
     void UpdateChunks(){
+        milkyWay.gameObject.SetActive(false);
         foreach(Chunk chunk in chunks.Values){
             if(!chunk.isVisible){
                 continue;
@@ -98,8 +106,14 @@ public class ChunkManager : MonoBehaviour
             Vector3 pos = (Vector3)(currentChunkID - chunk.chunkID);
             chunk.transform.position = this.transform.position + pos * time;
             chunk.UpdateChunk(time);
-            
+
+            if (chunk.chunkID == Vector3Int.zero)
+            {
+                milkyWay.position = chunk.transform.position;
+                milkyWay.gameObject.SetActive(true);
+            }
         }
+        
     }
 
     //Caculate the number of shells needed for the desired render distance
@@ -131,6 +145,13 @@ public class ChunkManager : MonoBehaviour
         go.transform.name = "" + relativePosition + currentChunkID; 
         chunk.chunkID = relativePosition + currentChunkID;
         go.transform.parent = chunksParent.transform;
+        if (chunk.chunkID== Vector3Int.zero)
+        {
+            milkyWay.transform.parent = this.transform;
+            milkyWay.position = this.transform.position;
+
+            
+        }
         chunk.UpdateChunk(time);
         chunk.GenerateChunk();
         return chunk;

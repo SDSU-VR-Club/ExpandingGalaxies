@@ -251,7 +251,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 0, b: 0.69796467, a: 1}
+  m_Color: {r: 0, g: 0.05633378, b: 1, a: 1}
   m_RaycastTarget: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
@@ -369,80 +369,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 955e6fcde74a1b745b584c5962b101d7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!1001 &289404077
-PrefabInstance:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    m_TransformParent: {fileID: 0}
-    m_Modifications:
-    - target: {fileID: 4122595118054334294, guid: 63f76f7c8f3f47e458c4270689825f56,
-        type: 3}
-      propertyPath: m_Name
-      value: MilkyWay
-      objectReference: {fileID: 0}
-    - target: {fileID: 7047039381103816667, guid: 63f76f7c8f3f47e458c4270689825f56,
-        type: 3}
-      propertyPath: m_Materials.Array.data[0]
-      value: 
-      objectReference: {fileID: 2100000, guid: 9a424318d8a69f648967f05a379a43ca, type: 2}
-    - target: {fileID: 8916159125868834703, guid: 63f76f7c8f3f47e458c4270689825f56,
-        type: 3}
-      propertyPath: m_LocalPosition.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8916159125868834703, guid: 63f76f7c8f3f47e458c4270689825f56,
-        type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8916159125868834703, guid: 63f76f7c8f3f47e458c4270689825f56,
-        type: 3}
-      propertyPath: m_LocalPosition.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8916159125868834703, guid: 63f76f7c8f3f47e458c4270689825f56,
-        type: 3}
-      propertyPath: m_LocalRotation.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8916159125868834703, guid: 63f76f7c8f3f47e458c4270689825f56,
-        type: 3}
-      propertyPath: m_LocalRotation.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8916159125868834703, guid: 63f76f7c8f3f47e458c4270689825f56,
-        type: 3}
-      propertyPath: m_LocalRotation.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8916159125868834703, guid: 63f76f7c8f3f47e458c4270689825f56,
-        type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 8916159125868834703, guid: 63f76f7c8f3f47e458c4270689825f56,
-        type: 3}
-      propertyPath: m_RootOrder
-      value: 7
-      objectReference: {fileID: 0}
-    - target: {fileID: 8916159125868834703, guid: 63f76f7c8f3f47e458c4270689825f56,
-        type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8916159125868834703, guid: 63f76f7c8f3f47e458c4270689825f56,
-        type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8916159125868834703, guid: 63f76f7c8f3f47e458c4270689825f56,
-        type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: 63f76f7c8f3f47e458c4270689825f56, type: 3}
 --- !u!1 &303924777
 GameObject:
   m_ObjectHideFlags: 0
@@ -820,7 +746,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 0, b: 0.69796467, a: 1}
+  m_Color: {r: 0, g: 0.05633378, b: 1, a: 1}
   m_RaycastTarget: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
@@ -991,7 +917,7 @@ GameObject:
   - component: {fileID: 593798528}
   - component: {fileID: 593798529}
   m_Layer: 0
-  m_Name: GameObject
+  m_Name: PlayerAnchor
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1386,8 +1312,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 662, y: -644}
-  m_SizeDelta: {x: 1298.5, y: 129.2}
+  m_AnchoredPosition: {x: 952.2, y: -644}
+  m_SizeDelta: {x: 1879, y: 129.2}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &723204090
 MonoBehaviour:
@@ -1801,7 +1727,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 0, b: 0.69796467, a: 1}
+  m_Color: {r: 0, g: 0.05633378, b: 1, a: 1}
   m_RaycastTarget: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
@@ -1980,7 +1906,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 0, b: 0.69796467, a: 1}
+  m_Color: {r: 0, g: 0.05633378, b: 1, a: 1}
   m_RaycastTarget: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
@@ -2506,6 +2432,9 @@ MonoBehaviour:
   timeGrowthIncrement: 1
   selected: {fileID: 0}
   selectedDisplay: {fileID: 723204088}
+  laserPointers:
+  - {fileID: 1790309966}
+  - {fileID: 686068871}
 --- !u!4 &1600278182
 Transform:
   m_ObjectHideFlags: 0
@@ -2610,7 +2539,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1790309967
 Transform:
   m_ObjectHideFlags: 0
@@ -2914,12 +2843,12 @@ PrefabInstance:
     - target: {fileID: 5343540617697495014, guid: 10c23db8db27b8b458803feaf4bd76f5,
         type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 2530
+      value: 2777
       objectReference: {fileID: 0}
     - target: {fileID: 5343540617697495014, guid: 10c23db8db27b8b458803feaf4bd76f5,
         type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -39
+      value: 326
       objectReference: {fileID: 0}
     - target: {fileID: 5343540617697495014, guid: 10c23db8db27b8b458803feaf4bd76f5,
         type: 3}
@@ -2929,7 +2858,7 @@ PrefabInstance:
     - target: {fileID: 5343540617697495014, guid: 10c23db8db27b8b458803feaf4bd76f5,
         type: 3}
       propertyPath: m_SizeDelta.y
-      value: 61.8
+      value: 142.3
       objectReference: {fileID: 0}
     - target: {fileID: 5343540617697495014, guid: 10c23db8db27b8b458803feaf4bd76f5,
         type: 3}
