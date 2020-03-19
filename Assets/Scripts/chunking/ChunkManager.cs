@@ -16,7 +16,7 @@ public class ChunkManager : MonoBehaviour
     HashSet<Vector3Int> visibleChunks;
 
     public int _shellCount = 1; //NOTE :: Shells are very expensive, each layer costs n^3 computing power
-    
+    public Material milkyWayMat;
     private int shellCount{
         get{
             return _shellCount;
@@ -59,7 +59,7 @@ public class ChunkManager : MonoBehaviour
         if (!milkyWay)
         {
             milkyWay = Instantiate(clusterPrefab).transform;
-            milkyWay.GetComponent<MeshRenderer>().material.color = new Color(0, 1, 0);
+            milkyWay.GetComponent<MeshRenderer>().material = milkyWayMat;
             milkyWay.gameObject.name = "milky way";
         }
         chunksParent = new GameObject().transform;

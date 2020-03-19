@@ -5,6 +5,7 @@ using UnityEngine.VR;
 using UnityEngine.XR;
 using Valve.VR.InteractionSystem;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 public class StateManager : MonoBehaviour
 {
     bool isPaused = false;
@@ -159,9 +160,18 @@ public class StateManager : MonoBehaviour
     public void Travel()
     {
         if (selected&&!moving) {
+            
             StopAllCoroutines();
             StartCoroutine(moveTowards(selected.transform.position));
         }
+    }
+    public void Reload()
+    {
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+    }
+    public void quit()
+    {
+        Application.Quit();
     }
     private void selectCluster(Transform target)
     {
@@ -171,11 +181,15 @@ public class StateManager : MonoBehaviour
         DistanceText.text = "Distance: " + d.ToString("F1") + " ly";
         
         VelocityText.text = "Velocity: " + (d * (1 + Random.RandomRange(-0.05f, 0.05f))).ToString("F1") + " km/s";
-        NameText.text = "Selected: " + target.gameObject.name;
+        NameText.text = "            to " + target.gameObject.name;
         selected = target.gameObject;
     }
     IEnumerator moveTowards(Vector3 destination )
     {
+        foreach (GameObject laser in laserPointers)
+        {
+            laser.SetActive(false);
+        }
         moving = true;
         transform.parent = null;
         float distance = Vector3.Distance(destination, playerTransform.position);
@@ -202,5 +216,9 @@ public class StateManager : MonoBehaviour
             playerTransform.parent = target;
         }
         moving = false;
+        foreach (GameObject laser in laserPointers)
+        {
+            laser.SetActive(true);
+        }
     }
 }
